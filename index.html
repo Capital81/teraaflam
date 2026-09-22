@@ -314,7 +314,7 @@
     .similar-row-scroll::-webkit-scrollbar { display: none; }
     .similar-mini-card {
       width: 115px; min-width: 115px; border-radius: 12px; overflow: hidden;
-      background: var(--card-bg); border: 1px solid var(--card-border); cursor: pointer;
+      background: var(--card-bg); border: 1px solid var(--card-border); cursor: pointer; position: relative;
     }
     .similar-mini-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
     .similar-mini-card .s-txt { font-size: 10.5px; font-weight: 700; padding: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: right; }
@@ -412,7 +412,7 @@
     .dialog-card {
       background: #0d121f; border: 1px solid var(--card-border);
       border-radius: 22px; padding: 22px; width: 92%; max-width: 490px; text-align: center;
-      max-height: 90vh; overflow-y: auto;
+      max-height: 90vh; overflow-y: auto; text-align: right;
     }
     .admin-input {
       width: 100%; background: #131b2e; border: 1px solid var(--card-border);
@@ -568,7 +568,7 @@
               <img id="dtlPoster" src="" alt="بوستر العمل">
             </div>
             <div class="poster-quick-actions">
-              <div class="circle-tool-btn" id="btnFavIcon" onclick="toggleFavMovie()" title="المفضلة">🤍</div>
+              <div class="circle-tool-btn" id="btnFavIcon" onclick="toggleFavMovie()" title="إضافة للمفضلة">🤍</div>
               <div class="circle-tool-btn" onclick="shareUserInvite()" title="مشاركة">🔗</div>
             </div>
           </div>
@@ -634,10 +634,10 @@
             <span class="btn-edit-name" onclick="changeCustomName()">✏️ تعديل الاسم</span>
           </div>
         </div>
-        <span class="badge-pill" id="userVipBadgeStatus" style="font-size:11px; padding:6px 12px;">حساب VIP</span>
+        <span class="badge-pill" id="userVipBadgeStatus" style="font-size:11px; padding:6px 12px;">عضوية قياسية</span>
       </div>
 
-      <!-- متابعة المشاهدة (آخر عمل تم فتحه) -->
+      <!-- متابعة المشاهدة -->
       <div id="continueWatchingWrap" style="display:none; margin-bottom: 18px;">
         <div class="sec-block-title">
           <span>🕒 متابعة المشاهدة</span>
@@ -668,18 +668,21 @@
       <div style="background:linear-gradient(135deg, rgba(18,24,43,0.9) 0%, rgba(10,14,28,0.95) 100%); border:1px solid var(--card-border); border-radius:24px; padding:22px; margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div style="text-align:right;">
-            <div style="font-size:12.5px; color:var(--text-dim);">رصيد نقاط المشاهدة</div>
+            <div style="font-size:12.5px; color:var(--text-dim); display:flex; align-items:center; gap:5px;">
+              <span>رصيد نقاط المشاهدة المجانية</span>
+              <span style="cursor:pointer; font-size:14px;" onclick="openPointsInfoModal()" title="كيف تزيد نقاطك؟">ℹ️</span>
+            </div>
             <div style="font-size:36px; font-weight:900; color:#fbbf24; font-family:monospace; margin-top:4px;" id="uPointsDisplay">150</div>
           </div>
           <button style="background:var(--accent); border:none; border-radius:12px; padding:10px 16px; color:#fff; font-size:12.5px; font-weight:800; cursor:pointer; box-shadow:0 4px 15px var(--accent-glow);" onclick="shareUserInvite()">كسب نقاط 🔗</button>
         </div>
 
-        <div style="font-size:13px; font-weight:900; color:#fff; margin:16px 0 6px 0; text-align:right;">🎁 متجر استبدال المكافآت</div>
+        <div style="font-size:13px; font-weight:900; color:#fff; margin:16px 0 6px 0; text-align:right;">🎁 متجر استبدال المكافآت المؤقتة</div>
         <div class="rewards-grid-box">
           <div class="reward-box-item">
             <div style="font-size:20px;">🛡️</div>
             <div style="font-size:12.5px; font-weight:800; margin-top:4px;">تخطي الإعلانات (VIP)</div>
-            <div style="font-size:10px; color:var(--text-dim);">مشاهدة فورية بدون إعلانات 7 أيام</div>
+            <div style="font-size:10px; color:var(--text-dim);">اشتراك مؤقت بدون إعلانات 7 أيام</div>
             <div class="reward-cost-badge">100 نقطة</div>
             <button class="reward-btn-action" onclick="redeemVipReward()">استبدال الآن</button>
           </div>
@@ -727,6 +730,19 @@
 
   </div>
 
+  <!-- نافذة شرح النقاط و نظام الـ VIP -->
+  <div class="overlay-backdrop" id="pointsInfoModalWindow" onclick="closePointsInfoModal(event)">
+    <div class="dialog-card">
+      <h3 style="font-size: 17px; font-weight: 900; margin-bottom: 12px; color:#fbbf24;">💡 كيف يعمل نظام النقاط والـ VIP؟</h3>
+      <div style="font-size: 13.5px; color:#cbd5e1; line-height: 1.8; text-align: right;">
+        <p style="margin-bottom: 10px;"><b>1. كيف تجمع النقاط؟</b><br>كل مشاركة لرابط دعوتك الخاص مع أصدقائك تمنحك نقاطاً مجانية عندما ينضمون للتطبيق عبر الرابط الخاص بك.</p>
+        <p style="margin-bottom: 10px;"><b>2. هل النقاط دائمة؟</b><br>رصيد النقاط والنظام المجاني هو عرض مؤقت حالياً للمستخدمين الأوائل لتجربة ميزات التطبيق.</p>
+        <p style="margin-bottom: 10px;"><b>3. اشتراكات الـ VIP المستقبلية:</b><br>قريباً، سيصبح اشتراك VIP (إزالة الإعلانات كلياً) خدمة <b>مدفوعة (بمصاري)</b> لدعم سيرفرات البث والتطوير المستمر، بينما تظل الخدمة الأساسية متاحة للجميع مجاناً مع مشاهدة الإعلانات.</p>
+      </div>
+      <button onclick="document.getElementById('pointsInfoModalWindow').classList.remove('open')" style="width:100%; background:var(--accent); border:none; border-radius:12px; padding:12px; color:#fff; font-weight:800; cursor:pointer; margin-top:16px;">فهمت، شكراً لك 👍</button>
+    </div>
+  </div>
+
   <!-- الشريط السفلي -->
   <nav class="capsule-navbar">
     <button class="cap-btn active" id="tabHomeBtn" onclick="switchMainTab('home')">
@@ -755,7 +771,6 @@
         <button class="adm-tab-btn" id="admTabBtnManage" onclick="switchAdminSubTab('manage')">📋 إدارة وحذف الأعمال (<span id="totalMediaCountBadge">0</span>)</button>
       </div>
 
-      <!-- تبويب 1: إضافة وتعديل -->
       <div id="admSectionAdd">
         <input type="text" id="admSearchQuery" class="admin-input" placeholder="رابط TMDB أو رقم العمل أو اسمه...">
         <button class="btn-fetch-tmdb" onclick="fetchTMDBData()">⚡ جلب البوستر والتفاصيل تلقائياً (TMDB)</button>
@@ -779,7 +794,6 @@
 
         <input type="text" id="admCode" class="admin-input" placeholder="كود البوت الأساسي (مثال: 7oQWz6zx)" style="border-color:#fbbf24;">
 
-        <!-- قسم المسلسلات مع تقسيم المواسم والأكواد -->
         <div id="admSeriesExtraBox" style="display:none; margin-top:8px;">
           <div style="display:flex; gap:6px;">
             <input type="number" id="admSeasonsCount" class="admin-input" placeholder="عدد المواسم" value="1" style="flex:1;" onchange="rebuildAdminSeasonsSelector()">
@@ -804,7 +818,6 @@
         <button id="btnAdminSaveAction" style="width:100%; background:var(--accent); border:none; border-radius:12px; padding:12px; color:#fff; font-weight:800; cursor:pointer; margin-top:6px;" onclick="saveNewMovieToFirebase()">✅ حفظ ونشر العمل فوراً</button>
       </div>
 
-      <!-- تبويب 2: إدارة وحذف الأعمال -->
       <div id="admSectionManage" style="display:none; max-height:420px; overflow-y:auto;">
         <div id="adminManageListContainer"></div>
       </div>
@@ -1610,6 +1623,16 @@
       renderProfileHistory();
     }
 
+    function openPointsInfoModal() {
+      document.getElementById('pointsInfoModalWindow').classList.add('open');
+    }
+
+    function closePointsInfoModal(e) {
+      if (e.target.id === 'pointsInfoModalWindow') {
+        document.getElementById('pointsInfoModalWindow').classList.remove('open');
+      }
+    }
+
     function openThemePicker() { document.getElementById('themePickerModal').classList.add('open'); }
     function closeThemePicker(e) { if (e.target.id === 'themePickerModal') document.getElementById('themePickerModal').classList.remove('open'); }
     function selectThemeClass(cls) {
@@ -1765,7 +1788,7 @@
       let points = parseInt(localStorage.getItem('tera_user_points') || '150');
       if (points < 100) return alert("عذراً، رصيدك غير كافٍ. تحتاج 100 نقطة على الأقل!");
 
-      if (confirm("هل تريد استبدال 100 نقطة لتفعيل اشتراك VIP وإلغاء الإعلانات لمدة 7 أيام؟")) {
+      if (confirm("هل تريد استبدال 100 نقطة لتفعيل اشتراك VIP المؤقت وإلغاء الإعلانات لمدة 7 أيام؟")) {
         points -= 100;
         localStorage.setItem('tera_user_points', points.toString());
         document.getElementById('uPointsDisplay').innerText = points;
@@ -1794,7 +1817,6 @@
       }
     }
 
-    // روابط التواصل وقناة التحديثات المحدثة
     function openSupportChat() {
       const tg = window.Telegram?.WebApp;
       const target = "https://t.me/Cap0ital_bot";
