@@ -4,7 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>تيرا أفلام | TeraFlix</title>
+  
+  <!-- مكتبة تليجرام ويب الرسمية -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- مكتبة إعلانات Adsgram الرسمية -->
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
   
   <style>
     :root {
@@ -626,7 +630,7 @@
     </button>
   </nav>
 
-  <!-- نافذة لوحة الإدارة المتطورة -->
+  <!-- نافذة لوحة الإدارة -->
   <div class="overlay-backdrop" id="adminModalWindow">
     <div class="dialog-card">
       <div class="admin-nav-tabs">
@@ -705,19 +709,21 @@
     </div>
   </div>
 
-  <!-- نافذة الإعلان -->
-  <div class="overlay-backdrop" id="adModalWindow">
-    <div class="dialog-card">
-      <h3 style="font-size: 16px; font-weight: 900;">إعلان قصير لدعم البوت</h3>
-      <div style="background:rgba(255,255,255,0.04); border:1px dashed var(--card-border); border-radius:14px; padding:24px 10px; margin:14px 0; font-size:12px; color:var(--text-dim);">
-        📢 مساحة إعلانية لدعم استمرار الخدمة مجاناً
-      </div>
-      <button id="btnSkipAdTimer" style="width:100%; background:var(--accent); border:none; border-radius:12px; padding:12px; color:#fff; font-weight:800; opacity:0.6; pointer-events:none;" onclick="completeAdWatch()">انتظر (5)...</button>
-    </div>
-  </div>
-
   <script>
     const FIREBASE_DB_URL = "https://tera-flix-default-rtdb.europe-west1.firebasedatabase.app/";
+    
+    // معرف Adsgram الرقمي
+    const ADSGRAM_BLOCK_ID = "49258";
+    let AdController = null;
+
+    // تهيئة مكتبة Adsgram
+    try {
+      if (window.Adsgram) {
+        AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
+      }
+    } catch (e) {
+      console.log("Adsgram init notice:", e);
+    }
 
     let database = [];
     let currentEditingEpisodeCodes = {};
@@ -1413,7 +1419,8 @@
     const savedTheme = localStorage.getItem('user_theme_tera');
     if (savedTheme) document.body.className = savedTheme;
 
-    const COOLDOWN_TIME = 30 * 60 * 1000;
+    // تشغيل طلب المشاهدة مع إعلانات Adsgram
+    const ADS_COOLDOWN = 10 * 60 * 1000; // إعلان كل 10 دقائق لتجنب إزعاج المشاهد
 
     function triggerWatchRequest() {
       if (isRequestInProgress) return;
@@ -1422,41 +1429,24 @@
       const mainBtn = document.getElementById('btnPrimaryWatch');
       if (mainBtn) mainBtn.classList.add('busy-btn');
 
-      const lastAd = localStorage.getItem('ad_view_timestamp');
+      const lastAd = localStorage.getItem('adsgram_last_view');
       const now = Date.now();
-      
-      if (!lastAd || (now - parseInt(lastAd)) >= COOLDOWN_TIME) {
-        displayAdModal();
+
+      // إذا حان وقت الإعلان وAdsgram متوفر
+      if ((!lastAd || (now - parseInt(lastAd)) >= ADS_COOLDOWN) && AdController) {
+        AdController.show().then((result) => {
+          // تم عرض الإعلان بنجاح
+          localStorage.setItem('adsgram_last_view', Date.now().toString());
+          pushToTelegramBot();
+        }).catch((err) => {
+          // في حال تم تخطي الإعلان أو تعذر تحميله لا نعطل المشاهد
+          console.log("Adsgram notice:", err);
+          pushToTelegramBot();
+        });
       } else {
+        // إذا كان المستخدم ضمن فترة الراحة (Cooldown)
         pushToTelegramBot();
       }
-    }
-
-    function displayAdModal() {
-      const modal = document.getElementById('adModalWindow');
-      const btn = document.getElementById('btnSkipAdTimer');
-      modal.classList.add('open');
-      btn.style.pointerEvents = 'none';
-      btn.style.opacity = '0.6';
-      let count = 5;
-      btn.innerText = `انتظر (${count})...`;
-      const t = setInterval(() => {
-        count--;
-        if (count > 0) {
-          btn.innerText = `انتظر (${count})...`;
-        } else {
-          clearInterval(t);
-          btn.innerText = "الانتقال للمشاهدة على تليجرام ➔";
-          btn.style.pointerEvents = 'auto';
-          btn.style.opacity = '1';
-        }
-      }, 1000);
-    }
-
-    function completeAdWatch() {
-      localStorage.setItem('ad_view_timestamp', Date.now().toString());
-      document.getElementById('adModalWindow').classList.remove('open');
-      pushToTelegramBot();
     }
 
     function pushToTelegramBot() {
