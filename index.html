@@ -212,7 +212,7 @@
     .story-section-title { font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
     .story-paragraph { font-size: 14.5px; color: #e2e8f0; line-height: 1.9; font-weight: 400; }
 
-    /* تصميم الحلقات الطولية والمواسم */
+    /* الحلقات */
     .series-episodes-section {
       background: transparent;
       margin-bottom: 28px; text-align: right;
@@ -330,11 +330,12 @@
     .similar-mini-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
     .similar-mini-card .s-txt { font-size: 10.5px; font-weight: 700; padding: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: right; }
 
-    /* واجهة الحساب */
+    /* واجهة الحساب الحديثة والشاملة */
     .profile-card-modern {
-      background: linear-gradient(145deg, rgba(22, 30, 53, 0.8) 0%, rgba(13, 18, 33, 0.9) 100%);
-      border: 1px solid var(--card-border); border-radius: 24px; padding: 22px;
+      background: linear-gradient(145deg, rgba(22, 30, 53, 0.85) 0%, rgba(13, 18, 33, 0.95) 100%);
+      border: 1px solid var(--card-border); border-radius: 24px; padding: 20px;
       display: flex; align-items: center; justify-content: space-between; margin: 16px 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
     .profile-user-left { display: flex; align-items: center; gap: 16px; }
     .user-avatar-wrap { position: relative; cursor: pointer; }
@@ -352,6 +353,59 @@
     .profile-name-title { font-size: 17px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 6px; }
     .profile-id-sub { font-size: 11.5px; color: var(--text-dim); font-family: monospace; margin-top: 3px; }
     .btn-edit-name { font-size: 11px; color: var(--accent); cursor: pointer; text-decoration: underline; margin-top: 4px; display: inline-block; }
+
+    .sec-block-title {
+      font-size: 15px; font-weight: 900; margin: 20px 0 10px 0; text-align: right;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    /* شريط استئناف المشاهدة */
+    .history-card-box {
+      background: rgba(18, 24, 43, 0.7); border: 1px solid var(--card-border);
+      border-radius: 18px; padding: 12px 16px; display: flex; align-items: center;
+      justify-content: space-between; cursor: pointer; transition: 0.2s;
+    }
+    .history-card-box:hover { border-color: var(--accent); background: rgba(26, 35, 62, 0.8); }
+    .history-info-flex { display: flex; align-items: center; gap: 12px; text-align: right; }
+    .history-thumb { width: 44px; height: 58px; border-radius: 8px; object-fit: cover; }
+    .btn-resume-play {
+      background: var(--accent); color: #fff; border: none; border-radius: 10px;
+      padding: 8px 14px; font-size: 12px; font-weight: 800; cursor: pointer;
+    }
+
+    /* متجر النقاط */
+    .rewards-grid-box {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px;
+    }
+    .reward-box-item {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 18px; padding: 14px; text-align: center;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .reward-cost-badge {
+      display: inline-block; background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.4);
+      color: #fbbf24; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 12px; margin: 4px 0 8px 0;
+    }
+    .reward-btn-action {
+      background: rgba(255,255,255,0.08); border: 1px solid var(--card-border);
+      color: #fff; font-size: 11.5px; font-weight: 800; padding: 7px; border-radius: 10px;
+      cursor: pointer; transition: 0.2s;
+    }
+    .reward-btn-action:hover { background: var(--accent); border-color: var(--accent); }
+
+    /* أزرار الدعم والروابط السريعة */
+    .links-list-group {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 18px; overflow: hidden; margin-top: 8px;
+    }
+    .profile-link-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; border-bottom: 1px solid var(--card-border);
+      cursor: pointer; font-size: 13.5px; font-weight: 800; transition: 0.2s;
+    }
+    .profile-link-row:last-child { border-bottom: none; }
+    .profile-link-row:hover { background: rgba(255,255,255,0.04); }
+    .profile-link-row .arrow-icon { color: var(--text-dim); font-size: 12px; }
 
     /* النافبار السفلي */
     .capsule-navbar {
@@ -580,7 +634,7 @@
       </div>
     </main>
 
-    <!-- 5. حسابي -->
+    <!-- 5. واجهة حسابي الشاملة والحديثة -->
     <main id="view-profile" class="view-container">
       <div class="profile-card-modern">
         <div class="profile-user-left">
@@ -591,20 +645,100 @@
           <div class="user-info-text">
             <div class="profile-name-title">
               <span id="uNameDisplay">فؤاد</span>
-              <span style="font-size:14px;">👑</span>
+              <span id="uVipCrown">👑</span>
             </div>
             <div class="profile-id-sub">معرف الحساب: <span id="uIdDisplay" style="color:var(--accent);">84910284</span></div>
             <span class="btn-edit-name" onclick="changeCustomName()">✏️ تعديل الاسم</span>
           </div>
         </div>
-        <span class="badge-pill" style="font-size:11px; padding:5px 12px;">حساب VIP</span>
+        <span class="badge-pill" id="userVipBadgeStatus" style="font-size:11px; padding:6px 12px;">حساب VIP</span>
       </div>
 
-      <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:24px; padding:24px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
-        <div style="font-size:13px; color:var(--text-dim);">رصيد نقاط المشاهدة</div>
-        <div style="font-size:42px; font-weight:900; color:#fbbf24; font-family:monospace; margin:10px 0;">150</div>
-        <div style="font-size:13px; font-weight:700; margin-bottom:16px;">شارك رابطك واكسب اشتراك VIP مجاني</div>
-        <button style="width:100%; background:var(--accent); border:none; border-radius:14px; padding:14px; color:#fff; font-size:14px; font-weight:800; cursor:pointer; box-shadow:0 4px 15px var(--accent-glow);" onclick="shareUserInvite()">مشاركة رابط الدعوة 🔗</button>
+      <!-- متابعة المشاهدة (آخر عمل تم فتحه) -->
+      <div id="continueWatchingWrap" style="display:none; margin-bottom: 18px;">
+        <div class="sec-block-title">
+          <span>🕒 متابعة المشاهدة</span>
+          <span style="font-size:11px; color:var(--text-dim); cursor:pointer;" onclick="clearHistoryRecord()">مسح السجل ✕</span>
+        </div>
+        <div class="history-card-box" id="historyCardBox" onclick="resumeHistoryWatch()">
+          <div class="history-info-flex">
+            <img id="historyThumbImg" src="" class="history-thumb">
+            <div>
+              <div id="historyTitleTxt" style="font-size:13.5px; font-weight:900; color:#fff;"></div>
+              <div id="historyMetaTxt" style="font-size:11px; color:var(--text-dim); margin-top:2px;"></div>
+            </div>
+          </div>
+          <button class="btn-resume-play">متابعة ▶</button>
+        </div>
+      </div>
+
+      <!-- قائمة المفضلة ❤️ -->
+      <div style="margin-bottom: 22px;">
+        <div class="sec-block-title">
+          <span>❤️ قائمتي المفضلة</span>
+          <span id="favCountLabel" style="font-size:11.5px; color:var(--text-dim);">0 أعمال</span>
+        </div>
+        <div class="similar-row-scroll" id="profileFavsListRow" style="min-height:70px;"></div>
+      </div>
+
+      <!-- بطاقة الرصيد ومتجر استبدال النقاط -->
+      <div style="background:linear-gradient(135deg, rgba(18,24,43,0.9) 0%, rgba(10,14,28,0.95) 100%); border:1px solid var(--card-border); border-radius:24px; padding:22px; margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="text-align:right;">
+            <div style="font-size:12.5px; color:var(--text-dim);">رصيد نقاط المشاهدة</div>
+            <div style="font-size:36px; font-weight:900; color:#fbbf24; font-family:monospace; margin-top:4px;" id="uPointsDisplay">150</div>
+          </div>
+          <button style="background:var(--accent); border:none; border-radius:12px; padding:10px 16px; color:#fff; font-size:12.5px; font-weight:800; cursor:pointer; box-shadow:0 4px 15px var(--accent-glow);" onclick="shareUserInvite()">كسب نقاط 🔗</button>
+        </div>
+
+        <div style="font-size:13px; font-weight:900; color:#fff; margin:16px 0 6px 0; text-align:right;">🎁 متجر استبدال المكافآت</div>
+        <div class="rewards-grid-box">
+          <div class="reward-box-item">
+            <div style="font-size:20px;">🛡️</div>
+            <div style="font-size:12.5px; font-weight:800; margin-top:4px;">تخطي الإعلانات (VIP)</div>
+            <div style="font-size:10px; color:var(--text-dim);">مشاهدة فورية بدون إعلانات 7 أيام</div>
+            <div class="reward-cost-badge">100 نقطة</div>
+            <button class="reward-btn-action" onclick="redeemVipReward()">استبدال الآن</button>
+          </div>
+
+          <div class="reward-box-item">
+            <div style="font-size:20px;">🎬</div>
+            <div style="font-size:12.5px; font-weight:800; margin-top:4px;">طلب عمل حصري</div>
+            <div style="font-size:10px; color:var(--text-dim);">طلب توفير فيلم أو مسلسل خاص</div>
+            <div class="reward-cost-badge">50 نقطة</div>
+            <button class="reward-btn-action" onclick="redeemMovieRequestReward()">طلب الآن</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- مركز الدعم والروابط الهامة -->
+      <div style="margin-bottom: 24px;">
+        <div class="sec-block-title">
+          <span>⚙️ مركز المساعدة والمجتمع</span>
+        </div>
+        <div class="links-list-group">
+          <div class="profile-link-row" onclick="openSupportChat()">
+            <span style="display:flex; align-items:center; gap:8px;">
+              <span>💬</span>
+              <span>تواصل مع الدعم الفني / إبلاغ عن رابط</span>
+            </span>
+            <span class="arrow-icon">◀</span>
+          </div>
+          <div class="profile-link-row" onclick="openChannelCommunity()">
+            <span style="display:flex; align-items:center; gap:8px;">
+              <span>📢</span>
+              <span>قناة التحديثات والأعمال اليومية</span>
+            </span>
+            <span class="arrow-icon">◀</span>
+          </div>
+          <div class="profile-link-row" onclick="openThemePicker()">
+            <span style="display:flex; align-items:center; gap:8px;">
+              <span>🎨</span>
+              <span>تخصيص ثيم وألوان التطبيق</span>
+            </span>
+            <span class="arrow-icon">◀</span>
+          </div>
+        </div>
       </div>
     </main>
 
@@ -716,13 +850,12 @@
     const ADSGRAM_BLOCK_ID = "49258";
     let AdController = null;
 
-    // تهيئة مكتبة Adsgram
     try {
       if (window.Adsgram) {
         AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
       }
     } catch (e) {
-      console.log("Adsgram init notice:", e);
+      console.log("Adsgram notice:", e);
     }
 
     let database = [];
@@ -756,6 +889,8 @@
         console.log("استخدام البيانات المحلية مؤقتاً...");
       }
       refreshAppViews();
+      renderProfileFavorites();
+      renderProfileHistory();
 
       const lastOpenedCode = localStorage.getItem('last_viewed_movie');
       if (lastOpenedCode) {
@@ -1175,6 +1310,12 @@
       document.getElementById('view-' + tab).classList.add('active');
       const activeBtn = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Btn');
       if (activeBtn) activeBtn.classList.add('active');
+      
+      if (tab === 'profile') {
+        renderProfileFavorites();
+        renderProfileHistory();
+      }
+
       window.scrollTo(0, 0);
     }
 
@@ -1279,6 +1420,11 @@
       document.getElementById('dtlGenre').innerText = item.genre || item.type;
       document.getElementById('dtlScore').innerText = '★ ' + item.score;
       document.getElementById('dtlStory').innerText = item.story;
+
+      // تحديث حالة زر المفضلة
+      const favList = JSON.parse(localStorage.getItem('my_tera_favs') || '[]');
+      const isFav = favList.some(f => f.code === item.code);
+      document.getElementById('btnFavIcon').innerText = isFav ? "❤️" : "🤍";
 
       const seriesWrap = document.getElementById('seriesEpisodesWrap');
       const watchBtnText = document.getElementById('watchBtnText');
@@ -1401,12 +1547,88 @@
       switchMainTab('home'); 
     }
 
-    let isFav = false;
+    // إدارة المفضلة
     function toggleFavMovie() { 
-      isFav = !isFav;
+      if (!activeMovieSelected) return;
+      let favList = JSON.parse(localStorage.getItem('my_tera_favs') || '[]');
+      const idx = favList.findIndex(f => f.code === activeMovieSelected.code);
+
       const icon = document.getElementById('btnFavIcon');
-      icon.innerText = isFav ? "❤️" : "🤍";
-      alert(isFav ? "تمت إضافة العمل إلى قائمتك المفضلة ❤️" : "تمت إزالة العمل من المفضلة");
+      if (idx !== -1) {
+        favList.splice(idx, 1);
+        icon.innerText = "🤍";
+        alert("تمت إزالة العمل من قائمتك المفضلة.");
+      } else {
+        favList.unshift(activeMovieSelected);
+        icon.innerText = "❤️";
+        alert("تمت إضافة العمل إلى قائمتك المفضلة ❤️");
+      }
+      localStorage.setItem('my_tera_favs', JSON.stringify(favList));
+      renderProfileFavorites();
+    }
+
+    function renderProfileFavorites() {
+      const container = document.getElementById('profileFavsListRow');
+      const countLabel = document.getElementById('favCountLabel');
+      if (!container) return;
+
+      const favList = JSON.parse(localStorage.getItem('my_tera_favs') || '[]');
+      countLabel.innerText = `${favList.length} أعمال`;
+
+      if (favList.length === 0) {
+        container.innerHTML = `<div style="font-size:12px; color:var(--text-dim); padding:10px 0; text-align:right;">لم تقم بإضافة أي عمل للمفضلة بعد. اضغط على أيقونة (🤍) داخل صفحة أي عمل لإضافته هنا.</div>`;
+        return;
+      }
+
+      container.innerHTML = favList.map(item => `
+        <div class="similar-mini-card" onclick='openMovieDetails(${JSON.stringify(item)})'>
+          <img src="${item.img}" alt="${item.title}">
+          <div class="s-txt">${item.title}</div>
+        </div>
+      `).join('');
+    }
+
+    // سجل المشاهدة (History)
+    function saveHistoryRecord(item, subInfo = '') {
+      const record = {
+        code: item.code,
+        title: item.title,
+        img: item.img,
+        meta: subInfo || `${item.type} • ${item.year}`,
+        timestamp: Date.now()
+      };
+      localStorage.setItem('tera_last_history', JSON.stringify(record));
+      renderProfileHistory();
+    }
+
+    function renderProfileHistory() {
+      const wrap = document.getElementById('continueWatchingWrap');
+      const recordStr = localStorage.getItem('tera_last_history');
+      if (!wrap) return;
+
+      if (!recordStr) {
+        wrap.style.display = 'none';
+        return;
+      }
+
+      const rec = JSON.parse(recordStr);
+      document.getElementById('historyThumbImg').src = rec.img;
+      document.getElementById('historyTitleTxt').innerText = rec.title;
+      document.getElementById('historyMetaTxt').innerText = rec.meta;
+      wrap.style.display = 'block';
+    }
+
+    function resumeHistoryWatch() {
+      const recordStr = localStorage.getItem('tera_last_history');
+      if (!recordStr) return;
+      const rec = JSON.parse(recordStr);
+      const found = database.find(m => m.code === rec.code);
+      if (found) openMovieDetails(found);
+    }
+
+    function clearHistoryRecord() {
+      localStorage.removeItem('tera_last_history');
+      renderProfileHistory();
     }
 
     function openThemePicker() { document.getElementById('themePickerModal').classList.add('open'); }
@@ -1420,7 +1642,7 @@
     if (savedTheme) document.body.className = savedTheme;
 
     // تشغيل طلب المشاهدة مع إعلانات Adsgram
-    const ADS_COOLDOWN = 10 * 60 * 1000; // إعلان كل 10 دقائق لتجنب إزعاج المشاهد
+    const ADS_COOLDOWN = 10 * 60 * 1000;
 
     function triggerWatchRequest() {
       if (isRequestInProgress) return;
@@ -1429,22 +1651,33 @@
       const mainBtn = document.getElementById('btnPrimaryWatch');
       if (mainBtn) mainBtn.classList.add('busy-btn');
 
+      // تسجيل في التاريخ
+      if (activeMovieSelected) {
+        const subTxt = activeMovieSelected.type === 'مسلسل' ? `الموسم ${selectedSeasonIndex} - الحلقة ${selectedEpisodeNumber}` : `فيلم كامل FHD`;
+        saveHistoryRecord(activeMovieSelected, subTxt);
+      }
+
+      // فحص هل المستخدم VIP بدون إعلانات
+      const vipUntil = parseInt(localStorage.getItem('tera_vip_until') || '0');
+      const isVipActive = Date.now() < vipUntil;
+
+      if (isVipActive) {
+        pushToTelegramBot();
+        return;
+      }
+
       const lastAd = localStorage.getItem('adsgram_last_view');
       const now = Date.now();
 
-      // إذا حان وقت الإعلان وAdsgram متوفر
       if ((!lastAd || (now - parseInt(lastAd)) >= ADS_COOLDOWN) && AdController) {
         AdController.show().then((result) => {
-          // تم عرض الإعلان بنجاح
           localStorage.setItem('adsgram_last_view', Date.now().toString());
           pushToTelegramBot();
         }).catch((err) => {
-          // في حال تم تخطي الإعلان أو تعذر تحميله لا نعطل المشاهد
           console.log("Adsgram notice:", err);
           pushToTelegramBot();
         });
       } else {
-        // إذا كان المستخدم ضمن فترة الراحة (Cooldown)
         pushToTelegramBot();
       }
     }
@@ -1465,10 +1698,8 @@
       const tg = window.Telegram?.WebApp;
 
       if (tg) {
-        // 1. فتح الرابط داخل التليجرام
         tg.openTelegramLink(tgTarget);
 
-        // 2. تصغير التطبيق للأسفل ليتحول إلى شريط عائم سفلي
         setTimeout(() => {
           try {
             if (typeof tg.minimize === 'function') {
@@ -1485,7 +1716,6 @@
         window.open(tgTarget, '_blank');
       }
 
-      // فك الحماية بعد ثانيتين
       setTimeout(() => {
         isRequestInProgress = false;
         const mainBtn = document.getElementById('btnPrimaryWatch');
@@ -1501,6 +1731,7 @@
       let userName = localStorage.getItem('custom_user_name') || "فؤاد";
       let userPhoto = localStorage.getItem('custom_user_photo') || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80";
       let userId = localStorage.getItem('custom_user_id') || "84910284";
+      let points = parseInt(localStorage.getItem('tera_user_points') || '150');
 
       if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
         const u = tg.initDataUnsafe.user;
@@ -1512,6 +1743,18 @@
       document.getElementById('uNameDisplay').innerText = userName;
       document.getElementById('uIdDisplay').innerText = userId;
       document.getElementById('uAvatarImg').src = userPhoto;
+      document.getElementById('uPointsDisplay').innerText = points;
+
+      // فحص الـ VIP
+      const vipUntil = parseInt(localStorage.getItem('tera_vip_until') || '0');
+      const badge = document.getElementById('userVipBadgeStatus');
+      if (Date.now() < vipUntil) {
+        badge.innerText = "VIP نشط (بدون إعلانات)";
+        badge.style.background = "#10b981";
+      } else {
+        badge.innerText = "عضوية قياسية";
+        badge.style.background = "var(--accent)";
+      }
     }
 
     function changeCustomName() {
@@ -1541,6 +1784,55 @@
       const tg = window.Telegram?.WebApp;
       if (tg && tg.openTelegramLink) tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('شاهد أقوى الأفلام والمسلسلات مجاناً على تيرا أفلام! 🍿🎬')}`);
       else { navigator.clipboard?.writeText(link); alert("تم نسخ رابط الدعوة: " + link); }
+    }
+
+    // متجر النقاط التفاعلي
+    function redeemVipReward() {
+      let points = parseInt(localStorage.getItem('tera_user_points') || '150');
+      if (points < 100) return alert("عذراً، رصيدك غير كافٍ. تحتاج 100 نقطة على الأقل!");
+
+      if (confirm("هل تريد استبدال 100 نقطة لتفعيل اشتراك VIP وإلغاء الإعلانات لمدة 7 أيام؟")) {
+        points -= 100;
+        localStorage.setItem('tera_user_points', points.toString());
+        document.getElementById('uPointsDisplay').innerText = points;
+
+        const oneWeek = 7 * 24 * 60 * 60 * 1000;
+        localStorage.setItem('tera_vip_until', (Date.now() + oneWeek).toString());
+
+        const badge = document.getElementById('userVipBadgeStatus');
+        badge.innerText = "VIP نشط (بدون إعلانات)";
+        badge.style.background = "#10b981";
+
+        alert("🎉 مبروك! تم تفعيل اشتراك VIP بنجاح لمدة أسبوع كامل بدون إعلانات!");
+      }
+    }
+
+    function redeemMovieRequestReward() {
+      let points = parseInt(localStorage.getItem('tera_user_points') || '150');
+      if (points < 50) return alert("عذراً، تحتاج 50 نقطة لطلب فيلم أو مسلسل.");
+
+      const movieName = prompt("اكتب اسم الفيلم أو المسلسل وسنة إنتاجه الذي تود توفيره:");
+      if (movieName && movieName.trim()) {
+        points -= 50;
+        localStorage.setItem('tera_user_points', points.toString());
+        document.getElementById('uPointsDisplay').innerText = points;
+        alert(`✅ تم استلام طلبك لعمل (${movieName.trim()})، وسيتم رفعه وتوفيره قريباً في تيرا أفلام!`);
+      }
+    }
+
+    // روابط المجتمع والدعم
+    function openSupportChat() {
+      const tg = window.Telegram?.WebApp;
+      const target = "https://t.me/Cinema0nlybot";
+      if (tg && tg.openTelegramLink) tg.openTelegramLink(target);
+      else window.open(target, '_blank');
+    }
+
+    function openChannelCommunity() {
+      const tg = window.Telegram?.WebApp;
+      const target = "https://t.me/Cinema0nlybot";
+      if (tg && tg.openTelegramLink) tg.openTelegramLink(target);
+      else window.open(target, '_blank');
     }
 
     initUserProfile();
