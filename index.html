@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -25,7 +25,7 @@
 
     .wrapper { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 16px; }
 
-    /* الهيدر */
+    /* الهيدر العلوي */
     .top-nav {
       position: sticky; top: 0;
       background: rgba(7, 9, 19, 0.88);
@@ -45,7 +45,7 @@
     }
     .icon-btn:hover { border-color: var(--accent); color: #fff; }
 
-    /* البحث */
+    /* شريط البحث */
     .search-panel { max-height: 0; overflow: visible; opacity: 0; position: relative; margin-bottom: 0; transition: all 0.3s ease; z-index: 5000; }
     .search-panel.active { max-height: 90px; opacity: 1; margin: 12px 0 20px 0; }
     .search-input-field {
@@ -208,9 +208,7 @@
     .story-section-title { font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
     .story-paragraph { font-size: 14.5px; color: #e2e8f0; line-height: 1.9; font-weight: 400; }
 
-    /* =========================================================
-       تصميم الحلقات الطولية والمواسم طبق الأصل من اتفرج
-       ========================================================= */
+    /* تصميم الحلقات الطولية والمواسم */
     .series-episodes-section {
       background: transparent;
       margin-bottom: 28px; text-align: right;
@@ -229,7 +227,6 @@
       background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 15px var(--accent-glow);
     }
 
-    /* كروت الحلقات الأفقية مثل اتفرج */
     .episodes-list-layout {
       display: flex; flex-direction: column; gap: 10px; margin-top: 8px;
     }
@@ -268,7 +265,7 @@
       background: var(--accent); box-shadow: 0 0 12px var(--accent-glow);
     }
 
-    /* زر المشاهدة الرئيسي لمنع السبام */
+    /* زر المشاهدة الرئيسي */
     .etfarag-play-btn {
       width: 100%; background: linear-gradient(135deg, var(--accent) 0%, #6366f1 100%);
       border: none; border-radius: 16px; padding: 16px; color: #fff;
@@ -329,7 +326,7 @@
     .similar-mini-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
     .similar-mini-card .s-txt { font-size: 10.5px; font-weight: 700; padding: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: right; }
 
-    /* الحساب */
+    /* واجهة الحساب */
     .profile-card-modern {
       background: linear-gradient(145deg, rgba(22, 30, 53, 0.8) 0%, rgba(13, 18, 33, 0.9) 100%);
       border: 1px solid var(--card-border); border-radius: 24px; padding: 22px;
@@ -352,7 +349,7 @@
     .profile-id-sub { font-size: 11.5px; color: var(--text-dim); font-family: monospace; margin-top: 3px; }
     .btn-edit-name { font-size: 11px; color: var(--accent); cursor: pointer; text-decoration: underline; margin-top: 4px; display: inline-block; }
 
-    /* النافبار */
+    /* النافبار السفلي */
     .capsule-navbar {
       position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
       width: calc(100% - 28px); max-width: 440px;
@@ -537,7 +534,7 @@
         </div>
       </div>
 
-      <!-- قسم مواسم وحلقات المسلسل طبق الأصل من اتفرج -->
+      <!-- قسم مواسم وحلقات المسلسل -->
       <div class="series-episodes-section" id="seriesEpisodesWrap">
         <div style="font-size:16px; font-weight:900; margin-bottom:12px; color:#fff;">الحلقات</div>
         <div class="seasons-scroll-tabs" id="seasonsTabContainer"></div>
@@ -550,7 +547,7 @@
         <span id="watchBtnText">مشاهدة وتحميل العمل (1080p FHD)</span>
       </button>
 
-      <!-- التعليقات -->
+      <!-- التعليقات والتقييم -->
       <div class="reviews-card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
           <div style="font-size: 15px; font-weight: 900;">⭐ تقييم المشاهدين والتعليقات</div>
@@ -725,7 +722,7 @@
     let database = [];
     let currentEditingEpisodeCodes = {};
     let activeAdminSelectedSeason = 1;
-    let isRequestInProgress = false; // لمنع التكبيس المتكرر والسبام
+    let isRequestInProgress = false;
 
     async function loadMoviesFromCloud() {
       try {
@@ -832,7 +829,6 @@
       }
     }
 
-    // جلب TMDB التلقائي
     async function fetchTMDBData() {
       let q = document.getElementById('admSearchQuery').value.trim();
       if (!q) return alert("ضع رابط صفحة TMDB أو رقم العمل أو اسمه أولاً!");
@@ -1311,7 +1307,6 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // إعداد واجهة المواسم والحلقات المستوحاة من اتفرج
     function setupSeriesSeasonsAndEpisodes(series) {
       const seasonsCount = series.seasons || 1;
       const episodesCount = series.episodesPerSeason || 8;
@@ -1336,12 +1331,10 @@
       renderEpisodesList(series, 1, episodesCount);
     }
 
-    // قائمة الحلقات الطولية الأنيقة مثل اتفرج مع منع التكبيس المتكرر
     function renderEpisodesList(series, seasonNum, count) {
       const epContainer = document.getElementById('episodesListContainer');
       epContainer.innerHTML = '';
 
-      // أسماء حلقات افتراضية أنيقة في حال عدم وجود أسماء محددة
       const defaultTitles = [
         'أهلاً بكم في البداية',
         'الرقصة الأولى والمواجهة',
@@ -1376,18 +1369,15 @@
         `;
 
         card.onclick = () => {
-          if (isRequestInProgress) return; // منع التكبيس المتكرر والسبام
+          if (isRequestInProgress) return;
 
           document.querySelectorAll('.etfarag-ep-card').forEach(c => c.classList.remove('active-playing'));
           card.classList.add('active-playing');
           selectedEpisodeNumber = ep;
 
           currentPayloadCode = specificCode || series.code;
-          
-          // تحديث نص زر المشاهدة
           document.getElementById('watchBtnText').innerText = `جاري فتح الحلقة ${ep} (الموسم ${seasonNum}) في البوت...`;
 
-          // تنفيذ المشاهدة فوراً مع نزول وانتقال للبوت
           triggerWatchRequest();
         };
 
@@ -1426,14 +1416,11 @@
     const COOLDOWN_TIME = 30 * 60 * 1000;
 
     function triggerWatchRequest() {
-      if (isRequestInProgress) return; // حماية ضد السبام
+      if (isRequestInProgress) return;
 
       isRequestInProgress = true;
       const mainBtn = document.getElementById('btnPrimaryWatch');
-      mainBtn.classList.add('busy-btn');
-
-      // النزول السلس للأسفل لمشاهدة تفاعل الضغط
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      if (mainBtn) mainBtn.classList.add('busy-btn');
 
       const lastAd = localStorage.getItem('ad_view_timestamp');
       const now = Date.now();
@@ -1441,9 +1428,7 @@
       if (!lastAd || (now - parseInt(lastAd)) >= COOLDOWN_TIME) {
         displayAdModal();
       } else {
-        setTimeout(() => {
-          pushToTelegramBot();
-        }, 300);
+        pushToTelegramBot();
       }
     }
 
@@ -1476,26 +1461,46 @@
 
     function pushToTelegramBot() {
       const bot = "Cinema0nlybot";
-      const codeToSend = currentPayloadCode || (activeMovieSelected ? activeMovieSelected.code : 'default');
-      const target = `https://t.me/${bot}?start=${codeToSend}`;
-      const tg = window.Telegram?.WebApp;
-
-      // فتح الرابط وإغلاق الـ Mini App للنزول فوراً إلى شات البوت
-      if (tg) {
-        tg.openTelegramLink(target);
-        setTimeout(() => {
-          try { tg.close(); } catch(e){}
-        }, 500);
-      } else {
-        window.location.href = target;
-      }
-
-      // فك الحماية بعد ثانية ونصف
-      setTimeout(() => {
+      const codeToSend = currentPayloadCode || (activeMovieSelected ? activeMovieSelected.code : '');
+      
+      if (!codeToSend) {
+        alert("تنبيه: لم يتم تعيين كود تليجرام لهذا العمل بعد!");
         isRequestInProgress = false;
         const mainBtn = document.getElementById('btnPrimaryWatch');
         if (mainBtn) mainBtn.classList.remove('busy-btn');
-      }, 1500);
+        return;
+      }
+
+      const target = `https://t.me/${bot}?start=${codeToSend}`;
+      const tg = window.Telegram?.WebApp;
+
+      if (tg) {
+        // إرسال الرابط للبوت مباشرة داخل الشات
+        tg.openTelegramLink(target);
+        
+        // تصغير التطبيق للأسفل بدلاً من إغلاقه بالكامل ليبقى شريطاً سفلياً
+        setTimeout(() => {
+          try {
+            if (typeof tg.minimize === 'function') {
+              tg.minimize();
+            }
+          } catch (e) {
+            console.log("Minimize status:", e);
+          }
+        }, 150);
+      } else {
+        window.open(target, '_blank');
+      }
+
+      // فك الحماية بعد ثانيتين
+      setTimeout(() => {
+        isRequestInProgress = false;
+        const mainBtn = document.getElementById('btnPrimaryWatch');
+        if (mainBtn) {
+          mainBtn.classList.remove('busy-btn');
+          mainBtn.innerText = "▶️ مشاهدة وتحميل (1080p FHD)";
+        }
+      }, 2000);
     }
 
     function initUserProfile() {
@@ -1549,5 +1554,4 @@
     loadMoviesFromCloud();
   </script>
 </body>
-  
 </html>
