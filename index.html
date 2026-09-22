@@ -71,28 +71,42 @@
     .search-entry:hover { background: rgba(255,255,255,0.08); }
     .search-entry img { width: 40px; height: 55px; border-radius: 6px; object-fit: cover; background: #222; }
 
-    /* سلايدر الهيرو */
+    /* سلايدر الهيرو المتناسق الجديد */
     .spotlight-card {
-      position: relative; width: 100%; height: 280px;
-      border-radius: 20px; overflow: hidden; margin: 14px 0 10px 0;
+      position: relative; width: 100%; height: 320px;
+      border-radius: 22px; overflow: hidden; margin: 16px 0 12px 0;
       border: 1px solid var(--card-border); cursor: pointer;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.6); background: #121829;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6); background: #0c101c;
     }
-    @media (min-width: 768px) { .spotlight-card { height: 420px; } }
-    .spotlight-slide { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 0.6s ease; }
+    @media (min-width: 768px) { .spotlight-card { height: 380px; } }
+    .spotlight-slide { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 0.6s ease; display: flex; align-items: center; justify-content: space-between; padding: 24px; }
     .spotlight-slide.active { opacity: 1; pointer-events: auto; }
-    .spotlight-slide img { width: 100%; height: 100%; object-fit: cover; }
-    .spotlight-gradient {
-      position: absolute; inset: 0;
-      background: linear-gradient(0deg, var(--bg-base) 10%, rgba(6,9,19,0.3) 60%, transparent 100%);
+    
+    .spotlight-bg-blur {
+      position: absolute; inset: 0; background-size: cover; background-position: center;
+      filter: blur(25px) brightness(0.25); transform: scale(1.1); z-index: 1;
     }
-    .spotlight-details { position: absolute; bottom: 20px; right: 24px; left: 24px; text-align: right; }
+    .spotlight-overlay-grad {
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(7,9,19,0.9) 0%, rgba(7,9,19,0.6) 50%, rgba(7,9,19,0.9) 100%);
+      z-index: 2;
+    }
+    .spotlight-poster-img {
+      position: relative; z-index: 3; height: 85%; aspect-ratio: 2/3;
+      border-radius: 14px; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .spotlight-info-side {
+      position: relative; z-index: 3; flex: 1; text-align: right; padding-right: 24px;
+    }
+
     .badge-pill {
       background: var(--accent); color: #fff; font-size: 11px;
       font-weight: 800; padding: 4px 12px; border-radius: 20px;
       display: inline-block; box-shadow: 0 0 12px var(--accent-glow);
     }
-    .spotlight-title { font-size: 22px; font-weight: 900; margin-top: 8px; }
+    .spotlight-title { font-size: 26px; font-weight: 900; margin: 10px 0; color: #fff; }
+    .spotlight-desc { font-size: 13px; color: var(--text-dim); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6; max-width: 600px; }
 
     .slider-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .dots-indicator { display: flex; gap: 6px; }
@@ -424,7 +438,7 @@
     }
     .cap-btn.active { color: var(--accent); }
 
-    /* القائمة الجانبية للكمبيوتر (Desktop Sidebar) */
+    /* القائمة الجانبية للكمبيوتر (Sidebar) */
     .desktop-sidebar {
       display: none;
     }
@@ -1272,12 +1286,16 @@
 
       box.innerHTML = spotlightData.map((item, idx) => `
         <div class="spotlight-slide ${idx === 0 ? 'active' : ''}">
-          <img src="${item.img}">
-          <div class="spotlight-gradient"></div>
-          <div class="spotlight-details">
+          <div class="spotlight-bg-blur" style="background-image: url('${item.img}')"></div>
+          <div class="spotlight-overlay-grad"></div>
+          
+          <img src="${item.img}" class="spotlight-poster-img">
+          
+          <div class="spotlight-info-side">
             <span class="badge-pill">${item.type} • اختيار اليوم</span>
             <div class="spotlight-title">${item.title}</div>
-            <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">${item.year} • ★ ${item.score}</div>
+            <div style="font-size:12px; color:#fbbf24; font-weight:800; margin-bottom:8px;">★ ${item.score} • ${item.year}</div>
+            <div class="spotlight-desc">${item.story}</div>
           </div>
         </div>
       `).join('');
@@ -1290,7 +1308,7 @@
       autoSlideInterval = setInterval(() => {
         currentSlide = (currentSlide + 1) % spotlightData.length;
         setSlide(currentSlide);
-      }, 4500);
+      }, 5000);
     }
 
     function setSlide(idx) {
