@@ -1471,25 +1471,28 @@
         return;
       }
 
-      const target = `https://t.me/${bot}?start=${codeToSend}`;
+      const tgTarget = `https://t.me/${bot}?start=${codeToSend}`;
       const tg = window.Telegram?.WebApp;
 
       if (tg) {
-        // إرسال الرابط للبوت مباشرة داخل الشات
-        tg.openTelegramLink(target);
-        
-        // تصغير التطبيق للأسفل بدلاً من إغلاقه بالكامل ليبقى شريطاً سفلياً
+        // 1. فتح الرابط داخل التليجرام
+        tg.openTelegramLink(tgTarget);
+
+        // 2. تصغير التطبيق للأسفل ليتحول إلى شريط عائم سفلي
         setTimeout(() => {
           try {
             if (typeof tg.minimize === 'function') {
               tg.minimize();
+            } else {
+              tg.close();
             }
           } catch (e) {
-            console.log("Minimize status:", e);
+            tg.close();
           }
-        }, 150);
+        }, 350);
+
       } else {
-        window.open(target, '_blank');
+        window.open(tgTarget, '_blank');
       }
 
       // فك الحماية بعد ثانيتين
