@@ -11,22 +11,27 @@
   <style>
     :root {
       --bg-base: #070913;
-      --card-bg: rgba(18, 24, 43, 0.7);
+      --card-bg: rgba(18, 24, 43, 0.75);
       --card-border: rgba(255, 255, 255, 0.08);
       --accent: #8b5cf6;
       --accent-glow: rgba(139, 92, 246, 0.35);
       --text-dim: #94a3b8;
     }
 
-    body.theme-cyan { --bg-base: #040d1a; --card-bg: rgba(10, 28, 54, 0.7); --accent: #06b6d4; --accent-glow: rgba(6, 182, 212, 0.35); }
-    body.theme-crimson { --bg-base: #100609; --card-bg: rgba(38, 12, 20, 0.7); --accent: #f43f5e; --accent-glow: rgba(244, 63, 94, 0.35); }
-    body.theme-emerald { --bg-base: #04120c; --card-bg: rgba(11, 38, 25, 0.7); --accent: #10b981; --accent-glow: rgba(16, 185, 129, 0.35); }
+    body.theme-cyan { --bg-base: #040d1a; --card-bg: rgba(10, 28, 54, 0.75); --accent: #06b6d4; --accent-glow: rgba(6, 182, 212, 0.35); }
+    body.theme-crimson { --bg-base: #100609; --card-bg: rgba(38, 12, 20, 0.75); --accent: #f43f5e; --accent-glow: rgba(244, 63, 94, 0.35); }
+    body.theme-emerald { --bg-base: #04120c; --card-bg: rgba(11, 38, 25, 0.75); --accent: #10b981; --accent-glow: rgba(16, 185, 129, 0.35); }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background-color: var(--bg-base); color: #f8fafc; padding-bottom: 95px; user-select: none; min-height: 100vh; overflow-x: hidden; }
+    body { background-color: var(--bg-base); color: #f8fafc; padding-bottom: 90px; user-select: none; min-height: 100vh; overflow-x: hidden; }
 
-    .wrapper { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+    @media (min-width: 1024px) {
+      body { padding-bottom: 20px; padding-right: 240px; }
+    }
 
+    .wrapper { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    /* الهيدر العلوي */
     .top-nav {
       position: sticky; top: 0;
       background: rgba(7, 9, 19, 0.88);
@@ -46,6 +51,7 @@
     }
     .icon-btn:hover { border-color: var(--accent); color: #fff; }
 
+    /* شريط البحث */
     .search-panel { max-height: 0; overflow: visible; opacity: 0; position: relative; margin-bottom: 0; transition: all 0.3s ease; z-index: 5000; }
     .search-panel.active { max-height: 90px; opacity: 1; margin: 12px 0 20px 0; }
     .search-input-field {
@@ -65,13 +71,14 @@
     .search-entry:hover { background: rgba(255,255,255,0.08); }
     .search-entry img { width: 40px; height: 55px; border-radius: 6px; object-fit: cover; background: #222; }
 
+    /* سلايدر الهيرو */
     .spotlight-card {
-      position: relative; width: 100%; height: 260px;
-      border-radius: 20px; overflow: hidden; margin: 10px 0 8px 0;
+      position: relative; width: 100%; height: 280px;
+      border-radius: 20px; overflow: hidden; margin: 14px 0 10px 0;
       border: 1px solid var(--card-border); cursor: pointer;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.5); background: #121829;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6); background: #121829;
     }
-    @media (min-width: 768px) { .spotlight-card { height: 380px; } }
+    @media (min-width: 768px) { .spotlight-card { height: 420px; } }
     .spotlight-slide { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 0.6s ease; }
     .spotlight-slide.active { opacity: 1; pointer-events: auto; }
     .spotlight-slide img { width: 100%; height: 100%; object-fit: cover; }
@@ -79,57 +86,63 @@
       position: absolute; inset: 0;
       background: linear-gradient(0deg, var(--bg-base) 10%, rgba(6,9,19,0.3) 60%, transparent 100%);
     }
-    .spotlight-details { position: absolute; bottom: 16px; right: 18px; left: 18px; text-align: right; }
+    .spotlight-details { position: absolute; bottom: 20px; right: 24px; left: 24px; text-align: right; }
     .badge-pill {
-      background: var(--accent); color: #fff; font-size: 10px;
-      font-weight: 800; padding: 3px 9px; border-radius: 20px;
+      background: var(--accent); color: #fff; font-size: 11px;
+      font-weight: 800; padding: 4px 12px; border-radius: 20px;
       display: inline-block; box-shadow: 0 0 12px var(--accent-glow);
     }
-    .spotlight-title { font-size: 18px; font-weight: 900; margin-top: 6px; }
+    .spotlight-title { font-size: 22px; font-weight: 900; margin-top: 8px; }
 
-    .slider-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .slider-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .dots-indicator { display: flex; gap: 6px; }
     .d-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: pointer; }
-    .d-dot.active { width: 20px; border-radius: 10px; background: var(--accent); }
+    .d-dot.active { width: 22px; border-radius: 10px; background: var(--accent); }
     .btn-dice {
       background: var(--card-bg); border: 1px solid var(--card-border);
-      color: #f1f5f9; font-size: 11.5px; font-weight: 700;
-      padding: 6px 14px; border-radius: 20px; cursor: pointer;
+      color: #f1f5f9; font-size: 12px; font-weight: 700;
+      padding: 7px 16px; border-radius: 20px; cursor: pointer;
     }
 
+    /* فلاتر الأقسام */
     .filter-pills-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; }
     .filter-pills-row::-webkit-scrollbar { display: none; }
     .filter-pill {
       background: var(--card-bg); border: 1px solid var(--card-border);
-      color: var(--text-dim); padding: 7px 16px; border-radius: 12px;
-      font-size: 12px; font-weight: 700; white-space: nowrap; cursor: pointer;
+      color: var(--text-dim); padding: 8px 18px; border-radius: 12px;
+      font-size: 12.5px; font-weight: 700; white-space: nowrap; cursor: pointer;
     }
     .filter-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 15px var(--accent-glow); }
 
-    .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    @media (min-width: 640px) { .cards-grid { grid-template-columns: repeat(4, 1fr); gap: 14px; } }
-    @media (min-width: 900px) { .cards-grid { grid-template-columns: repeat(6, 1fr); gap: 16px; } }
+    /* شبكة الكروت (مكبرة وأنيقة) */
+    .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    @media (min-width: 500px) { .cards-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
+    @media (min-width: 768px) { .cards-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; } }
+    @media (min-width: 1024px) { .cards-grid { grid-template-columns: repeat(5, 1fr); gap: 20px; } }
 
     .media-card {
       background: var(--card-bg); border: 1px solid var(--card-border);
-      border-radius: 14px; overflow: hidden; cursor: pointer;
-      display: flex; flex-direction: column; transition: transform 0.2s;
+      border-radius: 16px; overflow: hidden; cursor: pointer;
+      display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s;
     }
+    .media-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.2); }
     .media-card:active { transform: scale(0.96); }
     .card-cover { position: relative; width: 100%; aspect-ratio: 2/3; background: #131929; }
     .card-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .card-rate {
-      position: absolute; bottom: 6px; left: 6px;
-      background: rgba(0,0,0,0.8); color: #fbbf24;
-      font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 6px;
+      position: absolute; bottom: 8px; left: 8px;
+      background: rgba(0,0,0,0.85); color: #fbbf24;
+      font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 8px;
+      backdrop-filter: blur(4px);
     }
-    .card-meta-text { padding: 8px 6px; text-align: right; }
-    .c-title { font-size: 11.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .c-sub { font-size: 9.5px; color: var(--text-dim); margin-top: 2px; }
+    .card-meta-text { padding: 10px 10px; text-align: right; }
+    .c-title { font-size: 13px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .c-sub { font-size: 10.5px; color: var(--text-dim); margin-top: 3px; }
 
     .view-container { display: none; }
     .view-container.active { display: block; }
 
+    /* تفاصيل العمل السينمائية */
     .etfarag-hero-wrap {
       position: relative;
       margin: -14px -16px 20px -16px;
@@ -156,12 +169,12 @@
     }
     
     .etfarag-poster-box {
-      position: relative; width: 165px; min-width: 165px;
+      position: relative; width: 175px; min-width: 175px;
       border-radius: 18px; overflow: hidden;
       box-shadow: 0 18px 40px rgba(0,0,0,0.85);
       border: 1px solid rgba(255,255,255,0.15);
     }
-    @media (min-width: 768px) { .etfarag-poster-box { width: 210px; min-width: 210px; } }
+    @media (min-width: 768px) { .etfarag-poster-box { width: 220px; min-width: 220px; } }
     .etfarag-poster-box img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
     
     .poster-quick-actions {
@@ -179,8 +192,8 @@
     .etfarag-details-body { flex: 1; text-align: right; }
     @media (max-width: 680px) { .etfarag-details-body { text-align: center; } }
 
-    .movie-headline-title { font-size: 27px; font-weight: 900; line-height: 1.3; margin-bottom: 6px; }
-    .movie-headline-sub { font-size: 13.5px; color: var(--text-dim); margin-bottom: 16px; }
+    .movie-headline-title { font-size: 28px; font-weight: 900; line-height: 1.3; margin-bottom: 6px; }
+    .movie-headline-sub { font-size: 14px; color: var(--text-dim); margin-bottom: 16px; }
 
     .capsule-meta-tags {
       display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;
@@ -309,15 +322,15 @@
     .comment-text-body { font-size: 13px; color: #cbd5e1; line-height: 1.6; }
 
     .similar-row-scroll {
-      display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none;
+      display: flex; gap: 14px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none;
     }
     .similar-row-scroll::-webkit-scrollbar { display: none; }
     .similar-mini-card {
-      width: 115px; min-width: 115px; border-radius: 12px; overflow: hidden;
-      background: var(--card-bg); border: 1px solid var(--card-border); cursor: pointer; position: relative;
+      width: 130px; min-width: 130px; border-radius: 14px; overflow: hidden;
+      background: var(--card-bg); border: 1px solid var(--card-border); cursor: pointer;
     }
     .similar-mini-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
-    .similar-mini-card .s-txt { font-size: 10.5px; font-weight: 700; padding: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: right; }
+    .similar-mini-card .s-txt { font-size: 11.5px; font-weight: 700; padding: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: right; }
 
     .profile-card-modern {
       background: linear-gradient(145deg, rgba(22, 30, 53, 0.85) 0%, rgba(13, 18, 33, 0.95) 100%);
@@ -343,7 +356,7 @@
     .btn-edit-name { font-size: 11px; color: var(--accent); cursor: pointer; text-decoration: underline; margin-top: 4px; display: inline-block; }
 
     .sec-block-title {
-      font-size: 15px; font-weight: 900; margin: 20px 0 10px 0; text-align: right;
+      font-size: 16px; font-weight: 900; margin: 24px 0 12px 0; text-align: right;
       display: flex; align-items: center; justify-content: space-between;
     }
 
@@ -392,13 +405,17 @@
     .profile-link-row:hover { background: rgba(255,255,255,0.04); }
     .profile-link-row .arrow-icon { color: var(--text-dim); font-size: 12px; }
 
+    /* شريط التنقل السفلي للهواتف */
     .capsule-navbar {
       position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
       width: calc(100% - 28px); max-width: 440px;
-      background: rgba(14, 20, 36, 0.92); backdrop-filter: blur(20px);
+      background: rgba(14, 20, 36, 0.95); backdrop-filter: blur(20px);
       border: 1px solid var(--card-border); border-radius: 28px;
       display: flex; justify-content: space-around; padding: 8px 10px;
       z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    @media (min-width: 1024px) {
+      .capsule-navbar { display: none; }
     }
     .cap-btn {
       display: flex; flex-direction: column; align-items: center; gap: 3px;
@@ -407,12 +424,35 @@
     }
     .cap-btn.active { color: var(--accent); }
 
+    /* القائمة الجانبية للكمبيوتر (Desktop Sidebar) */
+    .desktop-sidebar {
+      display: none;
+    }
+    @media (min-width: 1024px) {
+      .desktop-sidebar {
+        display: flex; flex-direction: column;
+        position: fixed; top: 0; right: 0; width: 220px; height: 100vh;
+        background: rgba(10, 14, 26, 0.95); backdrop-filter: blur(20px);
+        border-left: 1px solid var(--card-border); padding: 24px 16px;
+        z-index: 2000; box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+      }
+      .sidebar-brand { font-size: 20px; font-weight: 900; margin-bottom: 30px; display: flex; align-items: center; gap: 8px; text-align: right; }
+      .sidebar-nav-btn {
+        display: flex; align-items: center; gap: 12px; background: transparent;
+        border: none; color: var(--text-dim); font-size: 14px; font-weight: 800;
+        padding: 12px 16px; border-radius: 14px; cursor: pointer; margin-bottom: 8px; width: 100%; transition: 0.2s;
+        text-align: right;
+      }
+      .sidebar-nav-btn:hover { background: rgba(255,255,255,0.04); color: #fff; }
+      .sidebar-nav-btn.active { background: var(--accent); color: #fff; box-shadow: 0 0 15px var(--accent-glow); }
+    }
+
     .overlay-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 9999; display: none; align-items: center; justify-content: center; }
     .overlay-backdrop.open { display: flex; }
     .dialog-card {
       background: #0d121f; border: 1px solid var(--card-border);
-      border-radius: 22px; padding: 22px; width: 92%; max-width: 490px; text-align: center;
-      max-height: 90vh; overflow-y: auto; text-align: right;
+      border-radius: 22px; padding: 22px; width: 92%; max-width: 490px; text-align: right;
+      max-height: 90vh; overflow-y: auto;
     }
     .admin-input {
       width: 100%; background: #131b2e; border: 1px solid var(--card-border);
@@ -472,7 +512,31 @@
 </head>
 <body>
 
-  <!-- الهيدر -->
+  <!-- القائمة الجانبية للكمبيوتر (Sidebar) -->
+  <nav class="desktop-sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-glow"></div>
+      <span>تيرا أفلام</span>
+    </div>
+    <button class="sidebar-nav-btn active" id="sideHomeBtn" onclick="switchMainTab('home')">
+      <span>🏠</span>
+      <span>الرئيسية</span>
+    </button>
+    <button class="sidebar-nav-btn" id="sideMoviesBtn" onclick="switchMainTab('movies')">
+      <span>🎬</span>
+      <span>أفلام</span>
+    </button>
+    <button class="sidebar-nav-btn" id="sideSeriesBtn" onclick="switchMainTab('series')">
+      <span>📺</span>
+      <span>مسلسلات</span>
+    </button>
+    <button class="sidebar-nav-btn" id="sideProfileBtn" onclick="switchMainTab('profile')">
+      <span>👤</span>
+      <span>حسابي</span>
+    </button>
+  </nav>
+
+  <!-- الهيدر العلوي -->
   <header class="top-nav">
     <div class="wrapper top-nav-inner">
       <div class="nav-icons">
@@ -507,13 +571,18 @@
         <button class="btn-dice" onclick="rollRandomMovie()">🎲 جرب حظك (اقتراح ذكي)</button>
       </div>
 
-      <div style="font-size: 16px; font-weight: 900; margin: 12px 0;">أحدث الإصدارات</div>
+      <!-- قسم الأعلى مشاهدة -->
+      <div class="sec-block-title">🔥 الأعلى مشاهدة وتقييماً</div>
+      <div class="similar-row-scroll" id="homeTopRatedRow" style="margin-bottom: 24px;"></div>
+
+      <!-- قسم مضاف حديثاً -->
+      <div class="sec-block-title">✨ مضاف حديثاً</div>
       <div class="cards-grid" id="mainHomeGrid"></div>
     </main>
 
     <!-- 2. قسم الأفلام -->
     <main id="view-movies" class="view-container">
-      <div style="font-size: 17px; font-weight: 900; margin: 10px 0 12px 0;">مكتبة الأفلام</div>
+      <div class="sec-block-title" style="margin-top:10px;">مكتبة الأفلام</div>
       <div class="filter-pills-row">
         <div class="filter-pill active" onclick="applyGenreFilter('الكل', 'movies')">الكل</div>
         <div class="filter-pill" onclick="applyGenreFilter('أكشن وحركة', 'movies')">أكشن وحركة</div>
@@ -525,7 +594,7 @@
 
     <!-- 3. قسم المسلسلات -->
     <main id="view-series" class="view-container">
-      <div style="font-size: 17px; font-weight: 900; margin: 10px 0 12px 0;">مكتبة المسلسلات</div>
+      <div class="sec-block-title" style="margin-top:10px;">مكتبة المسلسلات</div>
       <div class="filter-pills-row">
         <div class="filter-pill active" onclick="applyGenreFilter('الكل', 'series')">الكل</div>
         <div class="filter-pill" onclick="applyGenreFilter('أكشن وحركة', 'series')">أكشن وحركة</div>
@@ -575,20 +644,17 @@
         </div>
       </div>
 
-      <!-- قسم مواسم وحلقات المسلسل -->
       <div class="series-episodes-section" id="seriesEpisodesWrap">
         <div style="font-size:16px; font-weight:900; margin-bottom:12px; color:#fff;">الحلقات</div>
         <div class="seasons-scroll-tabs" id="seasonsTabContainer"></div>
         <div class="episodes-list-layout" id="episodesListContainer"></div>
       </div>
 
-      <!-- زر المشاهدة الرئيسي -->
       <button class="etfarag-play-btn" id="btnPrimaryWatch" onclick="triggerWatchRequest()">
         <span>▶️</span>
         <span id="watchBtnText">مشاهدة وتحميل العمل (1080p FHD)</span>
       </button>
 
-      <!-- التعليقات والتقييم -->
       <div class="reviews-card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
           <div style="font-size: 15px; font-weight: 900;">⭐ تقييم المشاهدين والتعليقات</div>
@@ -612,7 +678,7 @@
       </div>
 
       <div style="margin-top: 10px;">
-        <div style="font-size: 15px; font-weight: 900; margin-bottom: 12px; text-align: right;">أعمال مشابهة قد تعجبك</div>
+        <div class="sec-block-title">أعمال مشابهة قد تعجبك</div>
         <div class="similar-row-scroll" id="similarMoviesRow"></div>
       </div>
     </main>
@@ -637,7 +703,6 @@
         <span class="badge-pill" id="userVipBadgeStatus" style="font-size:11px; padding:6px 12px;">عضوية قياسية</span>
       </div>
 
-      <!-- متابعة المشاهدة -->
       <div id="continueWatchingWrap" style="display:none; margin-bottom: 18px;">
         <div class="sec-block-title">
           <span>🕒 متابعة المشاهدة</span>
@@ -655,7 +720,6 @@
         </div>
       </div>
 
-      <!-- قائمة المفضلة ❤️ -->
       <div style="margin-bottom: 22px;">
         <div class="sec-block-title">
           <span>❤️ قائمتي المفضلة</span>
@@ -664,7 +728,6 @@
         <div class="similar-row-scroll" id="profileFavsListRow" style="min-height:70px;"></div>
       </div>
 
-      <!-- بطاقة الرصيد ومتجر استبدال النقاط -->
       <div style="background:linear-gradient(135deg, rgba(18,24,43,0.9) 0%, rgba(10,14,28,0.95) 100%); border:1px solid var(--card-border); border-radius:24px; padding:22px; margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div style="text-align:right;">
@@ -697,7 +760,6 @@
         </div>
       </div>
 
-      <!-- مركز الدعم والروابط الهامة -->
       <div style="margin-bottom: 24px;">
         <div class="sec-block-title">
           <span>⚙️ مركز المساعدة والمجتمع</span>
@@ -730,11 +792,11 @@
 
   </div>
 
-  <!-- نافذة شرح النقاط و نظام الـ VIP -->
+  <!-- نافذة شرح النقاط -->
   <div class="overlay-backdrop" id="pointsInfoModalWindow" onclick="closePointsInfoModal(event)">
     <div class="dialog-card">
       <h3 style="font-size: 17px; font-weight: 900; margin-bottom: 12px; color:#fbbf24;">💡 كيف يعمل نظام النقاط والـ VIP؟</h3>
-      <div style="font-size: 13.5px; color:#cbd5e1; line-height: 1.8; text-align: right;">
+      <div style="font-size: 13.5px; color:#cbd5e1; line-height: 1.8;">
         <p style="margin-bottom: 10px;"><b>1. كيف تجمع النقاط؟</b><br>كل مشاركة لرابط دعوتك الخاص مع أصدقائك تمنحك نقاطاً مجانية عندما ينضمون للتطبيق عبر الرابط الخاص بك.</p>
         <p style="margin-bottom: 10px;"><b>2. هل النقاط دائمة؟</b><br>رصيد النقاط والنظام المجاني هو عرض مؤقت حالياً للمستخدمين الأوائل لتجربة ميزات التطبيق.</p>
         <p style="margin-bottom: 10px;"><b>3. اشتراكات الـ VIP المستقبلية:</b><br>قريباً، سيصبح اشتراك VIP (إزالة الإعلانات كلياً) خدمة <b>مدفوعة (بمصاري)</b> لدعم سيرفرات البث والتطوير المستمر، بينما تظل الخدمة الأساسية متاحة للجميع مجاناً مع مشاهدة الإعلانات.</p>
@@ -743,7 +805,7 @@
     </div>
   </div>
 
-  <!-- الشريط السفلي -->
+  <!-- الشريط السفلي للهواتف -->
   <nav class="capsule-navbar">
     <button class="cap-btn active" id="tabHomeBtn" onclick="switchMainTab('home')">
       <span>🏠</span>
@@ -900,8 +962,21 @@
       fillGrid(database, 'mainHomeGrid');
       fillGrid(moviesList, 'moviesCatalogGrid');
       fillGrid(seriesList, 'seriesCatalogGrid');
+      renderHomeTopRated();
       initSpotlight();
       renderAdminManageList();
+    }
+
+    function renderHomeTopRated() {
+      const topRow = document.getElementById('homeTopRatedRow');
+      if (!topRow) return;
+      const sorted = [...database].sort((a, b) => parseFloat(b.score) - parseFloat(a.score)).slice(0, 8);
+      topRow.innerHTML = sorted.map(item => `
+        <div class="similar-mini-card" onclick='openMovieDetails(${JSON.stringify(item)})'>
+          <img src="${item.img}" alt="${item.title}">
+          <div class="s-txt">${item.title}</div>
+        </div>
+      `).join('');
     }
 
     function toggleSeriesAdminFields() {
@@ -1301,10 +1376,16 @@
       }
       document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
       document.querySelectorAll('.cap-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.sidebar-nav-btn').forEach(b => b.classList.remove('active'));
+
       document.getElementById('btnBackHome').style.display = 'none';
       document.getElementById('view-' + tab).classList.add('active');
-      const activeBtn = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Btn');
-      if (activeBtn) activeBtn.classList.add('active');
+      
+      const activeBtnMob = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Btn');
+      if (activeBtnMob) activeBtnMob.classList.add('active');
+
+      const activeBtnSide = document.getElementById('side' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Btn');
+      if (activeBtnSide) activeBtnSide.classList.add('active');
       
       if (tab === 'profile') {
         renderProfileFavorites();
