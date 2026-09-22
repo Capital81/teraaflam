@@ -40,7 +40,7 @@
       padding: 14px 0; z-index: 1000;
     }
     .top-nav-inner { display: flex; justify-content: space-between; align-items: center; }
-    .brand { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 900; }
+    .brand { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 900; cursor: pointer; }
     .brand-glow { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
     .nav-icons { display: flex; align-items: center; gap: 10px; }
     .icon-btn {
@@ -71,7 +71,7 @@
     .search-entry:hover { background: rgba(255,255,255,0.08); }
     .search-entry img { width: 40px; height: 55px; border-radius: 6px; object-fit: cover; background: #222; }
 
-    /* سلايدر الهيرو المتناسق الجديد */
+    /* سلايدر الهيرو */
     .spotlight-card {
       position: relative; width: 100%; height: 320px;
       border-radius: 22px; overflow: hidden; margin: 16px 0 12px 0;
@@ -118,7 +118,6 @@
       padding: 7px 16px; border-radius: 20px; cursor: pointer;
     }
 
-    /* فلاتر الأقسام */
     .filter-pills-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; }
     .filter-pills-row::-webkit-scrollbar { display: none; }
     .filter-pill {
@@ -128,7 +127,6 @@
     }
     .filter-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 15px var(--accent-glow); }
 
-    /* شبكة الكروت (مكبرة وأنيقة) */
     .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
     @media (min-width: 500px) { .cards-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
     @media (min-width: 768px) { .cards-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; } }
@@ -156,7 +154,6 @@
     .view-container { display: none; }
     .view-container.active { display: block; }
 
-    /* تفاصيل العمل السينمائية */
     .etfarag-hero-wrap {
       position: relative;
       margin: -14px -16px 20px -16px;
@@ -450,7 +447,7 @@
         border-left: 1px solid var(--card-border); padding: 24px 16px;
         z-index: 2000; box-shadow: -10px 0 30px rgba(0,0,0,0.5);
       }
-      .sidebar-brand { font-size: 20px; font-weight: 900; margin-bottom: 30px; display: flex; align-items: center; gap: 8px; text-align: right; }
+      .sidebar-brand { font-size: 20px; font-weight: 900; margin-bottom: 30px; display: flex; align-items: center; gap: 8px; text-align: right; cursor: pointer; }
       .sidebar-nav-btn {
         display: flex; align-items: center; gap: 12px; background: transparent;
         border: none; color: var(--text-dim); font-size: 14px; font-weight: 800;
@@ -528,7 +525,7 @@
 
   <!-- القائمة الجانبية للكمبيوتر (Sidebar) -->
   <nav class="desktop-sidebar">
-    <div class="sidebar-brand">
+    <div class="sidebar-brand" onclick="handleSecretAdminTrigger()">
       <div class="brand-glow"></div>
       <span>تيرا أفلام</span>
     </div>
@@ -555,11 +552,10 @@
     <div class="wrapper top-nav-inner">
       <div class="nav-icons">
         <div class="icon-btn" id="btnBackHome" style="display:none;" onclick="showHomeView()">➔</div>
-        <div class="icon-btn" onclick="openAdminPanel()" title="لوحة الإدارة">⚙️</div>
         <div class="icon-btn" onclick="openThemePicker()" title="تغيير الثيم">🎨</div>
         <div class="icon-btn" onclick="toggleSmartSearch()" title="بحث">🔍</div>
       </div>
-      <div class="brand">
+      <div class="brand" onclick="handleSecretAdminTrigger()">
         <div class="brand-glow"></div>
         <span>تيرا أفلام</span>
       </div>
@@ -933,6 +929,22 @@
     let currentEditingEpisodeCodes = {};
     let activeAdminSelectedSeason = 1;
     let isRequestInProgress = false;
+    let adminClickCount = 0;
+    let adminClickTimer = null;
+
+    function handleSecretAdminTrigger() {
+      adminClickCount++;
+      clearTimeout(adminClickTimer);
+      
+      if (adminClickCount >= 3) {
+        adminClickCount = 0;
+        openAdminPanel();
+      } else {
+        adminClickTimer = setTimeout(() => {
+          adminClickCount = 0;
+        }, 800);
+      }
+    }
 
     async function loadMoviesFromCloud() {
       try {
@@ -1266,7 +1278,7 @@
 
     function openAdminPanel() {
       const pin = prompt("أدخل رمز المرور للدخول إلى لوحة الإدارة:");
-      if (pin === "1234") {
+      if (pin === "050469") {
         document.getElementById('adminModalWindow').classList.add('open');
         switchAdminSubTab('add');
       } else if (pin !== null) {
