@@ -934,7 +934,7 @@
     let activeAdminSelectedSeason = 1;
     let isRequestInProgress = false;
 
-    // المنطق السري لفتح لوحة الإدارة عند الضغط 3 مرات متتالية على كلمة "تيرا أفلام"
+    // فتح لوحة الإدارة عند الضغط 3 مرات متتالية على كلمة "تيرا أفلام"
     let adminClickCount = 0;
     let adminClickTimer = null;
 
@@ -1813,19 +1813,8 @@
       const tg = window.Telegram?.WebApp;
 
       if (tg && tg.initData) {
-        // تنفيذ أمر التصغير الفوري وتوجيه تليجرام للبوت بالتوازي لتفادي تعليق النافذة
-        try {
-          if (typeof tg.minimize === 'function') {
-            tg.minimize();
-          }
-        } catch (err) {
-          console.log("Minimize error:", err);
-        }
-
-        setTimeout(() => {
-          tg.openTelegramLink(tgTarget);
-        }, 100);
-
+        // فتح الرابط الرسمي للبوت المعتمد من تليجرام
+        tg.openTelegramLink(tgTarget);
       } else {
         window.open(tgTarget, '_blank');
       }
@@ -1837,7 +1826,7 @@
           mainBtn.classList.remove('busy-btn');
           mainBtn.innerText = "▶️ مشاهدة وتحميل (1080p FHD)";
         }
-      }, 1500);
+      }, 1000);
     }
 
     function initUserProfile() {
@@ -1951,3 +1940,4 @@
   </script>
 </body>
 </html>
+
