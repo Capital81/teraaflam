@@ -40,7 +40,7 @@
       padding: 14px 0; z-index: 1000;
     }
     .top-nav-inner { display: flex; justify-content: space-between; align-items: center; }
-    .brand { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 900; }
+    .brand { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 900; cursor: pointer; }
     .brand-glow { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
     .nav-icons { display: flex; align-items: center; gap: 10px; }
     .icon-btn {
@@ -71,7 +71,7 @@
     .search-entry:hover { background: rgba(255,255,255,0.08); }
     .search-entry img { width: 40px; height: 55px; border-radius: 6px; object-fit: cover; background: #222; }
 
-    /* سلايدر الهيرو المتناسق الجديد */
+    /* سلايدر الهيرو */
     .spotlight-card {
       position: relative; width: 100%; height: 320px;
       border-radius: 22px; overflow: hidden; margin: 16px 0 12px 0;
@@ -128,7 +128,7 @@
     }
     .filter-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 15px var(--accent-glow); }
 
-    /* شبكة الكروت (مكبرة وأنيقة) */
+    /* شبكة الكروت */
     .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
     @media (min-width: 500px) { .cards-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
     @media (min-width: 768px) { .cards-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; } }
@@ -450,7 +450,7 @@
         border-left: 1px solid var(--card-border); padding: 24px 16px;
         z-index: 2000; box-shadow: -10px 0 30px rgba(0,0,0,0.5);
       }
-      .sidebar-brand { font-size: 20px; font-weight: 900; margin-bottom: 30px; display: flex; align-items: center; gap: 8px; text-align: right; }
+      .sidebar-brand { font-size: 20px; font-weight: 900; margin-bottom: 30px; display: flex; align-items: center; gap: 8px; text-align: right; cursor: pointer; }
       .sidebar-nav-btn {
         display: flex; align-items: center; gap: 12px; background: transparent;
         border: none; color: var(--text-dim); font-size: 14px; font-weight: 800;
@@ -528,7 +528,7 @@
 
   <!-- القائمة الجانبية للكمبيوتر (Sidebar) -->
   <nav class="desktop-sidebar">
-    <div class="sidebar-brand">
+    <div class="sidebar-brand" onclick="handleSecretAdminClick()">
       <div class="brand-glow"></div>
       <span>تيرا أفلام</span>
     </div>
@@ -550,16 +550,16 @@
     </button>
   </nav>
 
-  <!-- الهيدر العلوي -->
+  <!-- الهيدر العلوي بدون زر الترس -->
   <header class="top-nav">
     <div class="wrapper top-nav-inner">
       <div class="nav-icons">
         <div class="icon-btn" id="btnBackHome" style="display:none;" onclick="showHomeView()">➔</div>
-        <div class="icon-btn" onclick="openAdminPanel()" title="لوحة الإدارة">⚙️</div>
         <div class="icon-btn" onclick="openThemePicker()" title="تغيير الثيم">🎨</div>
         <div class="icon-btn" onclick="toggleSmartSearch()" title="بحث">🔍</div>
       </div>
-      <div class="brand">
+      <!-- الضغط هنا 3 مرات يفتح لوحة الإدارة سراً -->
+      <div class="brand" onclick="handleSecretAdminClick()" title="تيرا أفلام">
         <div class="brand-glow"></div>
         <span>تيرا أفلام</span>
       </div>
@@ -933,6 +933,23 @@
     let currentEditingEpisodeCodes = {};
     let activeAdminSelectedSeason = 1;
     let isRequestInProgress = false;
+
+    // المنطق السري لفتح لوحة الإدارة عند الضغط 3 مرات متتالية على كلمة "تيرا أفلام"
+    let adminClickCount = 0;
+    let adminClickTimer = null;
+
+    function handleSecretAdminClick() {
+      adminClickCount++;
+      clearTimeout(adminClickTimer);
+      adminClickTimer = setTimeout(() => {
+        adminClickCount = 0;
+      }, 1200);
+
+      if (adminClickCount >= 3) {
+        adminClickCount = 0;
+        openAdminPanel();
+      }
+    }
 
     async function loadMoviesFromCloud() {
       try {
@@ -1593,7 +1610,6 @@
 
       for (let ep = 1; ep <= count; ep++) {
         const specificKey = `s${seasonNum}_e${ep}`;
-        const specificCode = series.episodeCodes && series.episodeCodes[specificKey];
         const titleText = defaultTitles[(ep - 1) % defaultTitles.length];
 
         const card = document.createElement('div');
@@ -1620,7 +1636,9 @@
           card.classList.add('active-playing');
           selectedEpisodeNumber = ep;
 
-          currentPayloadCode = specificCode || series.code;
+          const exactCode = series.episodeCodes?.[specificKey] || series.code;
+          currentPayloadCode = exactCode;
+
           document.getElementById('watchBtnText').innerText = `جاري فتح الحلقة ${ep} (الموسم ${seasonNum}) في البوت...`;
 
           triggerWatchRequest();
@@ -1630,8 +1648,8 @@
       }
 
       const firstKey = `s${seasonNum}_e1`;
-      const firstEpCode = series.episodeCodes && series.episodeCodes[firstKey];
-      currentPayloadCode = firstEpCode || series.code;
+      const firstEpCode = series.episodeCodes?.[firstKey] || series.code;
+      currentPayloadCode = firstEpCode;
       document.getElementById('watchBtnText').innerText = `مشاهدة الحلقة 1 (الموسم ${seasonNum}) على تليجرام ➔`;
     }
 
@@ -1795,20 +1813,18 @@
       const tgTarget = `https://t.me/${bot}?start=${codeToSend}`;
       const tg = window.Telegram?.WebApp;
 
-      if (tg) {
+      if (tg && tg.initData) {
         tg.openTelegramLink(tgTarget);
 
         setTimeout(() => {
           try {
             if (typeof tg.minimize === 'function') {
               tg.minimize();
-            } else {
-              tg.close();
             }
           } catch (e) {
-            tg.close();
+            console.log("Minimize skipped:", e);
           }
-        }, 350);
+        }, 300);
 
       } else {
         window.open(tgTarget, '_blank');
@@ -1821,7 +1837,7 @@
           mainBtn.classList.remove('busy-btn');
           mainBtn.innerText = "▶️ مشاهدة وتحميل (1080p FHD)";
         }
-      }, 2000);
+      }, 1500);
     }
 
     function initUserProfile() {
