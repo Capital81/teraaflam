@@ -545,7 +545,8 @@
     <div class="wrapper top-nav-inner">
       <div class="nav-icons">
         <div class="icon-btn" id="btnBackHome" style="display:none;" onclick="showHomeView()">➔</div>
-        <div class="icon-btn" onclick="openAdminPanel()" title="لوحة الإدارة">⚙️</div>
+        <!-- زر الترس مخفي تماماً عن الزوار، ولفتحه افتح الكونسول أو استدعِ الدالة openAdminPanel() عند الحاجة -->
+        <div class="icon-btn" onclick="openAdminPanel()" title="لوحة الإدارة" style="display:none;">⚙️</div>
         <div class="icon-btn" onclick="openThemePicker()" title="تغيير الثيم">🎨</div>
         <div class="icon-btn" onclick="toggleSmartSearch()" title="بحث">🔍</div>
       </div>
@@ -1602,7 +1603,7 @@
           card.classList.add('active-playing');
           selectedEpisodeNumber = ep;
 
-          // تصحيح مطابقة كود الحلقة أو الرجوع للكود العام للمسلسل
+          // جلب كود الحلقة المخصصة، وإن لم يتوفر تأخذ كود العمل العام
           const exactCode = series.episodeCodes?.[specificKey] || series.code;
           currentPayloadCode = exactCode;
 
@@ -1780,24 +1781,22 @@
       const tgTarget = `https://t.me/${bot}?start=${codeToSend}`;
       const tg = window.Telegram?.WebApp;
 
-      if (tg) {
-        // فتح البوت في تليجرام
+      if (tg && tg.initData) {
+        // إذا كان التطبيق يعمل داخل تليجرام
         tg.openTelegramLink(tgTarget);
 
-        // تصغير التطبيق بدل إغلاقه (Minimize)
         setTimeout(() => {
           try {
             if (typeof tg.minimize === 'function') {
               tg.minimize();
-            } else if (typeof tg.close === 'function') {
-              tg.close();
             }
           } catch (e) {
-            console.log("Minimize error:", e);
+            console.log("Minimize skipped:", e);
           }
-        }, 400);
+        }, 300);
 
       } else {
+        // إذا كان المستخدم يفتح من متصفح الكمبيوتر العادي
         window.open(tgTarget, '_blank');
       }
 
@@ -1808,7 +1807,7 @@
           mainBtn.classList.remove('busy-btn');
           mainBtn.innerText = "▶️ مشاهدة وتحميل (1080p FHD)";
         }
-      }, 2000);
+      }, 1500);
     }
 
     function initUserProfile() {
