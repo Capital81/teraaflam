@@ -1631,6 +1631,8 @@
         `;
 
         card.onclick = () => {
+          if (isRequestInProgress) return;
+
           document.querySelectorAll('.etfarag-ep-card').forEach(c => c.classList.remove('active-playing'));
           card.classList.add('active-playing');
           selectedEpisodeNumber = ep;
@@ -1795,7 +1797,7 @@
       }
     }
 
-    // دالة الإرسال الرسمية والمضمونة للبوت
+    // الدالة الرسمية التي تفتح البوت وتعيد المستخدم للشات أو الشريط السفلي بسلاسة
     function pushToTelegramBot() {
       const bot = "Cinema0nlybot";
       const codeToSend = currentPayloadCode || (activeMovieSelected ? activeMovieSelected.code : '');
@@ -1812,8 +1814,15 @@
       const tg = window.Telegram?.WebApp;
 
       if (tg && tg.initData) {
-        // فتح الرابط الرسمي المعتمد للبوت في تليجرام
         tg.openTelegramLink(webTgLink);
+        // استخدام tg.close() لإغلاق الميني أب والعودة الفورية لمحادثة البوت
+        setTimeout(() => {
+          try {
+            tg.close();
+          } catch (e) {
+            console.log("Close notice:", e);
+          }
+        }, 200);
       } else {
         window.open(webTgLink, '_blank');
       }
