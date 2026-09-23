@@ -558,7 +558,7 @@
         <div class="icon-btn" onclick="openThemePicker()" title="تغيير الثيم">🎨</div>
         <div class="icon-btn" onclick="toggleSmartSearch()" title="بحث">🔍</div>
       </div>
-      <!-- الضغط 3 مرات هنا يفتح لوحة الإدارة سراً -->
+      <!-- الضغط 3 مرات متتالية هنا يفتح لوحة الإدارة سراً -->
       <div class="brand" onclick="handleSecretAdminClick()" title="تيرا أفلام">
         <div class="brand-glow"></div>
         <span>تيرا أفلام</span>
@@ -1797,7 +1797,6 @@
       }
     }
 
-    // الدالة المتوافقة تماماً مع أسلوب تيليجرام وشريط اتفرج السفلي
     function pushToTelegramBot() {
       const bot = "Cinema0nlybot";
       const codeToSend = currentPayloadCode || (activeMovieSelected ? activeMovieSelected.code : '');
@@ -1810,20 +1809,20 @@
         return;
       }
 
-      const tgTarget = `https://t.me/${bot}?start=${codeToSend}`;
+      // الرابط الداخلي المباشر لتيليجرام مع رابط الويب الاحتياطي
+      const internalTgLink = `tg://resolve?domain=${bot}&start=${codeToSend}`;
+      const webTgLink = `https://t.me/${bot}?start=${codeToSend}`;
       const tg = window.Telegram?.WebApp;
 
-      if (tg) {
-        // تفعيل ميزات الحركة والسحب لضمان الاستجابة للشريط السفلي
-        if (typeof tg.enableVerticalSwipes === 'function') {
-          tg.enableVerticalSwipes();
+      if (tg && tg.initData) {
+        // تشغيل الرابط الداخلي المباشر لتشجيع تليجرام على فتح شات البوت تلقائياً
+        try {
+          window.location.href = internalTgLink;
+        } catch (e) {
+          tg.openTelegramLink(webTgLink);
         }
-
-        // فتح رابط البوت مباشرة داخل تيليجرام دون إغلاق الصفحة إجبارياً
-        tg.openTelegramLink(tgTarget);
-
       } else {
-        window.open(tgTarget, '_blank');
+        window.open(webTgLink, '_blank');
       }
 
       setTimeout(() => {
