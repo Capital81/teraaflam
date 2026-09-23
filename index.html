@@ -1797,6 +1797,7 @@
       }
     }
 
+    // الدالة المتوافقة تماماً مع أسلوب تيليجرام وشريط اتفرج السفلي
     function pushToTelegramBot() {
       const bot = "Cinema0nlybot";
       const codeToSend = currentPayloadCode || (activeMovieSelected ? activeMovieSelected.code : '');
@@ -1812,9 +1813,15 @@
       const tgTarget = `https://t.me/${bot}?start=${codeToSend}`;
       const tg = window.Telegram?.WebApp;
 
-      if (tg && tg.initData) {
-        // فتح الرابط الرسمي للبوت المعتمد من تليجرام
+      if (tg) {
+        // تفعيل ميزات الحركة والسحب لضمان الاستجابة للشريط السفلي
+        if (typeof tg.enableVerticalSwipes === 'function') {
+          tg.enableVerticalSwipes();
+        }
+
+        // فتح رابط البوت مباشرة داخل تيليجرام دون إغلاق الصفحة إجبارياً
         tg.openTelegramLink(tgTarget);
+
       } else {
         window.open(tgTarget, '_blank');
       }
@@ -1940,4 +1947,3 @@
   </script>
 </body>
 </html>
-
