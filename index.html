@@ -707,7 +707,7 @@
           </div>
           <div class="user-info-text">
             <div class="profile-name-title">
-              <span id="uNameDisplay">فؤاد</span>
+              <span id="uNameDisplay">محمد</span>
               <span id="uVipCrown">👑</span>
             </div>
             <div class="profile-id-sub">معرف الحساب: <span id="uIdDisplay" style="color:var(--accent);">84910284</span></div>
@@ -1486,7 +1486,7 @@
       if (!txt) return alert("اكتب تعليقك أولاً قبل الإرسال!");
       if (!activeMovieSelected) return;
 
-      const userName = document.getElementById('uNameDisplay').innerText || "فؤاد";
+      const userName = document.getElementById('uNameDisplay').innerText || "محمد";
       const userPhoto = document.getElementById('uAvatarImg').src;
 
       const newComment = {
@@ -1631,8 +1631,6 @@
         `;
 
         card.onclick = () => {
-          if (isRequestInProgress) return;
-
           document.querySelectorAll('.etfarag-ep-card').forEach(c => c.classList.remove('active-playing'));
           card.classList.add('active-playing');
           selectedEpisodeNumber = ep;
@@ -1797,6 +1795,7 @@
       }
     }
 
+    // دالة الإرسال الرسمية والمضمونة للبوت
     function pushToTelegramBot() {
       const bot = "Cinema0nlybot";
       const codeToSend = currentPayloadCode || (activeMovieSelected ? activeMovieSelected.code : '');
@@ -1809,18 +1808,12 @@
         return;
       }
 
-      // الرابط الداخلي المباشر لتيليجرام مع رابط الويب الاحتياطي
-      const internalTgLink = `tg://resolve?domain=${bot}&start=${codeToSend}`;
       const webTgLink = `https://t.me/${bot}?start=${codeToSend}`;
       const tg = window.Telegram?.WebApp;
 
       if (tg && tg.initData) {
-        // تشغيل الرابط الداخلي المباشر لتشجيع تليجرام على فتح شات البوت تلقائياً
-        try {
-          window.location.href = internalTgLink;
-        } catch (e) {
-          tg.openTelegramLink(webTgLink);
-        }
+        // فتح الرابط الرسمي المعتمد للبوت في تليجرام
+        tg.openTelegramLink(webTgLink);
       } else {
         window.open(webTgLink, '_blank');
       }
@@ -1837,7 +1830,7 @@
 
     function initUserProfile() {
       const tg = window.Telegram?.WebApp;
-      let userName = localStorage.getItem('custom_user_name') || "فؤاد";
+      let userName = localStorage.getItem('custom_user_name') || "محمد";
       let userPhoto = localStorage.getItem('custom_user_photo') || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80";
       let userId = localStorage.getItem('custom_user_id') || "84910284";
       let points = parseInt(localStorage.getItem('tera_user_points') || '150');
@@ -1946,3 +1939,4 @@
   </script>
 </body>
 </html>
+
