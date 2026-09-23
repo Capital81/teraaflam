@@ -1576,7 +1576,6 @@
 
       for (let ep = 1; ep <= count; ep++) {
         const specificKey = `s${seasonNum}_e${ep}`;
-        const specificCode = series.episodeCodes && series.episodeCodes[specificKey];
         const titleText = defaultTitles[(ep - 1) % defaultTitles.length];
 
         const card = document.createElement('div');
@@ -1603,8 +1602,10 @@
           card.classList.add('active-playing');
           selectedEpisodeNumber = ep;
 
-          // تصحيح المطابقة لضمان جلب الكود الصحيح للحلقة المحددة تماماً
-          currentPayloadCode = specificCode || series.episodeCodes?.[`s${seasonNum}_e${ep}`] || series.code;
+          // تصحيح مطابقة كود الحلقة أو الرجوع للكود العام للمسلسل
+          const exactCode = series.episodeCodes?.[specificKey] || series.code;
+          currentPayloadCode = exactCode;
+
           document.getElementById('watchBtnText').innerText = `جاري فتح الحلقة ${ep} (الموسم ${seasonNum}) في البوت...`;
 
           triggerWatchRequest();
@@ -1614,8 +1615,8 @@
       }
 
       const firstKey = `s${seasonNum}_e1`;
-      const firstEpCode = series.episodeCodes && series.episodeCodes[firstKey];
-      currentPayloadCode = firstEpCode || series.code;
+      const firstEpCode = series.episodeCodes?.[firstKey] || series.code;
+      currentPayloadCode = firstEpCode;
       document.getElementById('watchBtnText').innerText = `مشاهدة الحلقة 1 (الموسم ${seasonNum}) على تليجرام ➔`;
     }
 
@@ -1780,19 +1781,21 @@
       const tg = window.Telegram?.WebApp;
 
       if (tg) {
+        // فتح البوت في تليجرام
         tg.openTelegramLink(tgTarget);
 
+        // تصغير التطبيق بدل إغلاقه (Minimize)
         setTimeout(() => {
           try {
             if (typeof tg.minimize === 'function') {
               tg.minimize();
-            } else {
+            } else if (typeof tg.close === 'function') {
               tg.close();
             }
           } catch (e) {
-            tg.close();
+            console.log("Minimize error:", e);
           }
-        }, 350);
+        }, 400);
 
       } else {
         window.open(tgTarget, '_blank');
