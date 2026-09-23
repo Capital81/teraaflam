@@ -558,7 +558,7 @@
         <div class="icon-btn" onclick="openThemePicker()" title="تغيير الثيم">🎨</div>
         <div class="icon-btn" onclick="toggleSmartSearch()" title="بحث">🔍</div>
       </div>
-      <!-- الضغط هنا 3 مرات يفتح لوحة الإدارة سراً -->
+      <!-- الضغط 3 مرات هنا يفتح لوحة الإدارة سراً -->
       <div class="brand" onclick="handleSecretAdminClick()" title="تيرا أفلام">
         <div class="brand-glow"></div>
         <span>تيرا أفلام</span>
@@ -1610,6 +1610,7 @@
 
       for (let ep = 1; ep <= count; ep++) {
         const specificKey = `s${seasonNum}_e${ep}`;
+        const specificCode = series.episodeCodes && series.episodeCodes[specificKey];
         const titleText = defaultTitles[(ep - 1) % defaultTitles.length];
 
         const card = document.createElement('div');
@@ -1636,9 +1637,7 @@
           card.classList.add('active-playing');
           selectedEpisodeNumber = ep;
 
-          const exactCode = series.episodeCodes?.[specificKey] || series.code;
-          currentPayloadCode = exactCode;
-
+          currentPayloadCode = specificCode || series.code;
           document.getElementById('watchBtnText').innerText = `جاري فتح الحلقة ${ep} (الموسم ${seasonNum}) في البوت...`;
 
           triggerWatchRequest();
@@ -1648,8 +1647,8 @@
       }
 
       const firstKey = `s${seasonNum}_e1`;
-      const firstEpCode = series.episodeCodes?.[firstKey] || series.code;
-      currentPayloadCode = firstEpCode;
+      const firstEpCode = series.episodeCodes && series.episodeCodes[firstKey];
+      currentPayloadCode = firstEpCode || series.code;
       document.getElementById('watchBtnText').innerText = `مشاهدة الحلقة 1 (الموسم ${seasonNum}) على تليجرام ➔`;
     }
 
@@ -1814,17 +1813,18 @@
       const tg = window.Telegram?.WebApp;
 
       if (tg && tg.initData) {
-        tg.openTelegramLink(tgTarget);
+        // تنفيذ أمر التصغير الفوري وتوجيه تليجرام للبوت بالتوازي لتفادي تعليق النافذة
+        try {
+          if (typeof tg.minimize === 'function') {
+            tg.minimize();
+          }
+        } catch (err) {
+          console.log("Minimize error:", err);
+        }
 
         setTimeout(() => {
-          try {
-            if (typeof tg.minimize === 'function') {
-              tg.minimize();
-            }
-          } catch (e) {
-            console.log("Minimize skipped:", e);
-          }
-        }, 300);
+          tg.openTelegramLink(tgTarget);
+        }, 100);
 
       } else {
         window.open(tgTarget, '_blank');
