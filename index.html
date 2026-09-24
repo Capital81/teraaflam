@@ -894,6 +894,9 @@
     const FIREBASE_DB_URL = "https://tera-flix-default-rtdb.europe-west1.firebasedatabase.app/";
     const BOT_SERVER_USERNAME = "Unlimited99Server_bot";
 
+    // مدة الانتظار بين كل إعلان والآخر (15 دقيقة)
+    const AD_COOLDOWN_MS = 15 * 60 * 1000;
+
     let database = [];
     let currentEditingEpisodeCodes = {};
     let currentEditingEpisodesData = {};
@@ -1717,25 +1720,34 @@
     const savedTheme = localStorage.getItem('user_theme_tera');
     if (savedTheme) document.body.className = savedTheme;
 
-    // مسار سريع ومباشر لتشغيل الإعلان وإرسال الرابط فوراً
+    // تشغيل طلب المشاهدة بنظام مؤقت 15 دقيقة
     function triggerWatchRequest() {
       if (activeMovieSelected) {
         const subTxt = activeMovieSelected.type === 'مسلسل' ? `الموسم ${selectedSeasonIndex} - الحلقة ${selectedEpisodeNumber}` : `فيلم كامل FHD`;
         saveHistoryRecord(activeMovieSelected, subTxt);
       }
 
+      // 1. فحص اشتراك VIP
       const vipUntil = parseInt(localStorage.getItem('tera_vip_until') || '0');
-      const isVipActive = Date.now() < vipUntil;
-
-      if (isVipActive) {
+      if (Date.now() < vipUntil) {
         pushToTelegramBot();
         return;
       }
 
-      // تشغيل الإعلان مع تحويل سريع ومباشر
+      // 2. فحص المؤقت (إذا شاهد إعلان خلال آخر 15 دقيقة يتخطى الإعلان)
+      const lastAdTime = parseInt(localStorage.getItem('tera_last_ad_watched') || '0');
+      const isCooldownActive = (Date.now() - lastAdTime) < AD_COOLDOWN_MS;
+
+      if (isCooldownActive) {
+        pushToTelegramBot();
+        return;
+      }
+
+      // 3. تشغيل إعلان Monetag مع حفظ وقت المشاهدة
       if (typeof show_11882276 === 'function') {
         show_11882276()
           .then(() => {
+            localStorage.setItem('tera_last_ad_watched', Date.now().toString());
             pushToTelegramBot();
           })
           .catch((e) => {
