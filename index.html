@@ -868,7 +868,7 @@
           </select>
         </div>
 
-        <input type="text" id="admCode" class="admin-input" placeholder="كود البوت الأساسي (مثال: iR7Gbevz)" style="border-color:#fbbf24;">
+        <input type="text" id="admCode" class="admin-input" placeholder="كود البوت الأساسي" style="border-color:#fbbf24;">
 
         <div id="admSeriesExtraBox" style="display:none; margin-top:8px;">
           <div style="display:flex; gap:6px;">
@@ -961,25 +961,7 @@
         if (data) {
           database = Object.values(data);
         } else {
-          database = [
-            { 
-              title: 'The Mentalist', 
-              sub: 'The Mentalist (2008)', 
-              score: '8.2', 
-              type: 'مسلسل', 
-              genre: 'دراما', 
-              img: 'https://m.media-amazon.com/images/M/MV5BMTgzMjM3MDIzOV5BMl5BanBnXkFtZTcwNDQ3MDc1Mw@@._V1_FMjpg_UX1000_.jpg', 
-              year: '2008', 
-              dur: '1 مواسم', 
-              story: 'باتريك جين مستشار مستقل لمكتب التحقيقات في كاليفورنيا يستخدم مهاراته الحادة في الملاحظة لحل أصعب الجرائم.', 
-              code: 'iR7Gbevz',
-              seasons: 1,
-              episodesPerSeason: 8,
-              episodeCodes: {
-                "s1_e1": "iR7Gbevz"
-              }
-            }
-          ];
+          database = [];
         }
       } catch (e) {
         console.log("استخدام البيانات المحلية مؤقتاً...");
@@ -1618,7 +1600,7 @@
 
       for (let ep = 1; ep <= count; ep++) {
         const specificKey = `s${seasonNum}_e${ep}`;
-        const specificCode = series.episodeCodes && series.episodeCodes[specificKey];
+        const specificCode = (series.episodeCodes && series.episodeCodes[specificKey]) || series.code;
         const titleText = defaultTitles[(ep - 1) % defaultTitles.length];
 
         const card = document.createElement('div');
@@ -1645,7 +1627,7 @@
           card.classList.add('active-playing');
           selectedEpisodeNumber = ep;
 
-          currentPayloadCode = specificCode || series.code;
+          currentPayloadCode = specificCode;
           document.getElementById('watchBtnText').innerText = `جاري فتح الحلقة ${ep} (الموسم ${seasonNum}) في البوت...`;
 
           triggerWatchRequest();
@@ -1655,8 +1637,8 @@
       }
 
       const firstKey = `s${seasonNum}_e1`;
-      const firstEpCode = series.episodeCodes && series.episodeCodes[firstKey];
-      currentPayloadCode = firstEpCode || series.code;
+      const firstEpCode = (series.episodeCodes && series.episodeCodes[firstKey]) || series.code;
+      currentPayloadCode = firstEpCode;
       document.getElementById('watchBtnText').innerText = `مشاهدة الحلقة 1 (الموسم ${seasonNum}) على تليجرام ➔`;
     }
 
@@ -1805,10 +1787,14 @@
       }
     }
 
-    // الدالة الرسمية التي تفتح البوت الجديد وتعيد المستخدم للشات بسلاسة
+    // الدالة الرسمية المعدلة: فتح البوت في محادثة تليجرام دون إغلاق الموقع
     function pushToTelegramBot() {
-      const bot = BOT_SERVER_USERNAME; // تم الربط ببوت Unlimited99Server_bot
-      const codeToSend = currentPayloadCode || (activeMovieSelected ? activeMovieSelected.code : '');
+      const bot = BOT_SERVER_USERNAME;
+      let codeToSend = currentPayloadCode;
+      
+      if (!codeToSend && activeMovieSelected) {
+        codeToSend = activeMovieSelected.code;
+      }
       
       if (!codeToSend) {
         alert("تنبيه: لم يتم تعيين كود تليجرام لهذا العمل بعد!");
@@ -1818,19 +1804,12 @@
         return;
       }
 
-      const webTgLink = `https://t.me/${bot}?start=${codeToSend}`;
+      const webTgLink = `https://t.me/${bot}?start=${codeToSend.trim()}`;
       const tg = window.Telegram?.WebApp;
 
-      if (tg && tg.initData) {
+      if (tg && tg.openTelegramLink) {
+        // فتح محادثة البوت وترك الموقع مصغراً في الأسفل دون إغلاقه
         tg.openTelegramLink(webTgLink);
-        // إغلاق الميني أب والعودة الفورية لمحادثة البوت الجديد
-        setTimeout(() => {
-          try {
-            tg.close();
-          } catch (e) {
-            console.log("Close notice:", e);
-          }
-        }, 200);
       } else {
         window.open(webTgLink, '_blank');
       }
