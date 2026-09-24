@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>تيرا أفلام | TeraFlix</title>
   
+  <!-- Telegram Web App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
+  <!-- Monetag SDK الرسمي للبوت -->
+  <script src="//libtl.com/sdk.js" data-zone="11882276" data-sdk="show_11882276"></script>
   
   <style>
     :root {
@@ -46,7 +49,7 @@
       width: 38px; height: 38px; border-radius: 50%;
       background: var(--card-bg); border: 1px solid var(--card-border);
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 15px; color: var(--text-dim); transition: 0.2s;
+      cursor: font-size: 15px; color: var(--text-dim); transition: 0.2s;
     }
     .icon-btn:hover { border-color: var(--accent); color: #fff; }
 
@@ -908,18 +911,6 @@
     const FIREBASE_DB_URL = "https://tera-flix-default-rtdb.europe-west1.firebasedatabase.app/";
     const BOT_SERVER_USERNAME = "Unlimited99Server_bot";
 
-    // تفعيل Block ID الرسمي الجديد
-    const ADSGRAM_BLOCK_ID = "49553";
-    let AdController = null;
-
-    try {
-      if (window.Adsgram) {
-        AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
-      }
-    } catch (e) {
-      console.log("Adsgram notice:", e);
-    }
-
     let database = [];
     let currentEditingEpisodeCodes = {};
     let currentEditingEpisodesData = {};
@@ -1616,7 +1607,6 @@
           <div class="etfarag-ep-left-play">▶</div>
         `;
 
-        // تشغيل الحلقة الإجباري مع مرور الإعلان
         card.onclick = () => {
           document.querySelectorAll('.etfarag-ep-card').forEach(c => c.classList.remove('active-playing'));
           card.classList.add('active-playing');
@@ -1745,7 +1735,7 @@
     const savedTheme = localStorage.getItem('user_theme_tera');
     if (savedTheme) document.body.className = savedTheme;
 
-    // طلب المشاهدة المربوط بالإعلان الإجباري وبدون تخطي
+    // طلب المشاهدة المربوط بإعلان Monetag Rewarded Interstitial
     function triggerWatchRequest() {
       if (isRequestInProgress) return;
       isRequestInProgress = true;
@@ -1758,7 +1748,6 @@
         saveHistoryRecord(activeMovieSelected, subTxt);
       }
 
-      // فحص عضوية الـ VIP
       const vipUntil = parseInt(localStorage.getItem('tera_vip_until') || '0');
       const isVipActive = Date.now() < vipUntil;
 
@@ -1767,25 +1756,17 @@
         return;
       }
 
-      // حساب قياسي: إعلان Adsgram إجباري بدون Cooldown
-      if (AdController) {
-        AdController.show()
-          .then((result) => {
-            // التحقق الصارم من انتهاء الإعلان كاملاً
-            if (result && result.done) {
-              pushToTelegramBot();
-            } else {
-              alert("⚠️ يجب إكمال مشاهدة الإعلان بالكامل لمتابعة المشاهدة.");
-              resetWatchButtonState();
-            }
+      // تشغيل إعلان Monetag Rewarded Interstitial الإجباري
+      if (typeof show_11882276 === 'function') {
+        show_11882276()
+          .then(() => {
+            pushToTelegramBot();
           })
-          .catch((err) => {
-            console.error("Adsgram failed:", err);
-            // في حال عدم توفر إعلان حالياً من الشبكة، يُفتح الفيديو تفادياً لتعليق المستخدم
+          .catch((e) => {
+            console.warn("Monetag notice:", e);
             pushToTelegramBot();
           });
       } else {
-        // إذا لم يكن السكربت محملاً
         pushToTelegramBot();
       }
     }
@@ -1828,7 +1809,6 @@
     }
 
     function initUserProfile() {
-      // إجبار الحساب على الوضع القياسي للاختبار وفحص الإعلان
       localStorage.removeItem('tera_vip_until');
 
       const tg = window.Telegram?.WebApp;
