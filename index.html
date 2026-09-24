@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>تيرا أفلام | TeraFlix</title>
   
-  <!-- Telegram Web App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  <!-- Monetag SDK الرسمي للبوت -->
   <script src="//libtl.com/sdk.js" data-zone="11882276" data-sdk="show_11882276"></script>
   
   <style>
@@ -49,7 +47,7 @@
       width: 38px; height: 38px; border-radius: 50%;
       background: var(--card-bg); border: 1px solid var(--card-border);
       display: flex; align-items: center; justify-content: center;
-      cursor: font-size: 15px; color: var(--text-dim); transition: 0.2s;
+      font-size: 15px; color: var(--text-dim); transition: 0.2s; cursor: pointer;
     }
     .icon-btn:hover { border-color: var(--accent); color: #fff; }
 
@@ -292,9 +290,6 @@
       box-shadow: 0 10px 25px var(--accent-glow); margin-bottom: 26px;
       transition: all 0.2s;
     }
-    .etfarag-play-btn.busy-btn {
-      opacity: 0.6; pointer-events: none; filter: grayscale(0.5);
-    }
 
     .reviews-card {
       background: var(--card-bg); border: 1px solid var(--card-border);
@@ -521,7 +516,6 @@
 </head>
 <body>
 
-  <!-- القائمة الجانبية للكمبيوتر -->
   <nav class="desktop-sidebar">
     <div class="sidebar-brand" onclick="handleSecretAdminClick()">
       <div class="brand-glow"></div>
@@ -545,7 +539,6 @@
     </button>
   </nav>
 
-  <!-- الهيدر العلوي -->
   <header class="top-nav">
     <div class="wrapper top-nav-inner">
       <div class="nav-icons">
@@ -562,13 +555,11 @@
 
   <div class="wrapper">
 
-    <!-- شريط البحث -->
     <div class="search-panel" id="searchBoxWrap">
       <input type="text" class="search-input-field" id="mainSearchInput" placeholder="اكتب للبحث الفوري..." oninput="filterLiveQuery(this.value)">
       <div class="search-results-floating" id="searchFloatingList"></div>
     </div>
 
-    <!-- 1. الرئيسية -->
     <main id="view-home" class="view-container active">
       <div class="spotlight-card" onclick="openActiveSpotlight()">
         <div id="spotlightSlidesContainer"></div>
@@ -586,7 +577,6 @@
       <div class="cards-grid" id="mainHomeGrid"></div>
     </main>
 
-    <!-- 2. قسم الأفلام -->
     <main id="view-movies" class="view-container">
       <div class="sec-block-title" style="margin-top:10px;">مكتبة الأفلام</div>
       <div class="filter-pills-row">
@@ -598,7 +588,6 @@
       <div class="cards-grid" id="moviesCatalogGrid"></div>
     </main>
 
-    <!-- 3. قسم المسلسلات -->
     <main id="view-series" class="view-container">
       <div class="sec-block-title" style="margin-top:10px;">مكتبة المسلسلات</div>
       <div class="filter-pills-row">
@@ -610,7 +599,6 @@
       <div class="cards-grid" id="seriesCatalogGrid"></div>
     </main>
 
-    <!-- 4. تفاصيل العمل -->
     <main id="view-details" class="view-container">
       <div class="etfarag-hero-wrap">
         <div class="etfarag-backdrop-blur" id="dtlHeroBackdrop"></div>
@@ -689,7 +677,6 @@
       </div>
     </main>
 
-    <!-- 5. واجهة حسابي -->
     <main id="view-profile" class="view-container">
       <div class="profile-card-modern">
         <div class="profile-user-left">
@@ -798,20 +785,18 @@
 
   </div>
 
-  <!-- نافذة النقاط -->
   <div class="overlay-backdrop" id="pointsInfoModalWindow" onclick="closePointsInfoModal(event)">
     <div class="dialog-card">
       <h3 style="font-size: 17px; font-weight: 900; margin-bottom: 12px; color:#fbbf24;">💡 كيف يعمل نظام النقاط والـ VIP؟</h3>
       <div style="font-size: 13.5px; color:#cbd5e1; line-height: 1.8;">
         <p style="margin-bottom: 10px;"><b>1. كيف تجمع النقاط؟</b><br>كل مشاركة لرابط دعوتك الخاص مع أصدقائك تمنحك نقاطاً مجانية عندما ينضمون للتطبيق عبر الرابط الخاص بك.</p>
         <p style="margin-bottom: 10px;"><b>2. هل النقاط دائمة؟</b><br>رصيد النقاط والنظام المجاني هو عرض مؤقت حالياً للمستخدمين الأوائل لتجربة ميزات التطبيق.</p>
-        <p style="margin-bottom: 10px;"><b>3. اشتراكات الـ VIP المستقبلية:</b><br>قريباً، سيصبح اشتراك VIP (إزالة الإعلانات كلياً) خدمة <b>مدفوعة (بمصاري)</b> لدعم سيرفرات البث والتطوير المستمر، بينما تظل الخدمة الأساسية متاحة للجميع مجاناً مع مشاهدة الإعلانات.</p>
+        <p style="margin-bottom: 10px;"><b>3. اشتراكات الـ VIP المستقبلية:</b><br>قريباً، سيصبح اشتراك VIP (إزالة الإعلانات كلياً) خدمة <b>مدفوعة</b> لدعم سيرفرات البث والتطوير المستمر، بينما تظل الخدمة الأساسية متاحة للجميع مجاناً مع مشاهدة الإعلانات.</p>
       </div>
       <button onclick="document.getElementById('pointsInfoModalWindow').classList.remove('open')" style="width:100%; background:var(--accent); border:none; border-radius:12px; padding:12px; color:#fff; font-weight:800; cursor:pointer; margin-top:16px;">فهمت، شكراً لك 👍</button>
     </div>
   </div>
 
-  <!-- الشريط السفلي للهواتف -->
   <nav class="capsule-navbar">
     <button class="cap-btn active" id="tabHomeBtn" onclick="switchMainTab('home')">
       <span>🏠</span>
@@ -831,7 +816,6 @@
     </button>
   </nav>
 
-  <!-- نافذة لوحة الإدارة -->
   <div class="overlay-backdrop" id="adminModalWindow">
     <div class="dialog-card">
       <div class="admin-nav-tabs">
@@ -894,7 +878,6 @@
     </div>
   </div>
 
-  <!-- نافذة الثيمات -->
   <div class="overlay-backdrop" id="themePickerModal" onclick="closeThemePicker(event)">
     <div class="dialog-card">
       <h3 style="font-size: 16px; font-weight: 900;">تخصيص نمط الألوان</h3>
@@ -915,7 +898,6 @@
     let currentEditingEpisodeCodes = {};
     let currentEditingEpisodesData = {};
     let activeAdminSelectedSeason = 1;
-    let isRequestInProgress = false;
 
     let adminClickCount = 0;
     let adminClickTimer = null;
@@ -1735,14 +1717,8 @@
     const savedTheme = localStorage.getItem('user_theme_tera');
     if (savedTheme) document.body.className = savedTheme;
 
-    // طلب المشاهدة المربوط بإعلان Monetag Rewarded Interstitial
+    // مسار سريع ومباشر لتشغيل الإعلان وإرسال الرابط فوراً
     function triggerWatchRequest() {
-      if (isRequestInProgress) return;
-      isRequestInProgress = true;
-
-      const mainBtn = document.getElementById('btnPrimaryWatch');
-      if (mainBtn) mainBtn.classList.add('busy-btn');
-
       if (activeMovieSelected) {
         const subTxt = activeMovieSelected.type === 'مسلسل' ? `الموسم ${selectedSeasonIndex} - الحلقة ${selectedEpisodeNumber}` : `فيلم كامل FHD`;
         saveHistoryRecord(activeMovieSelected, subTxt);
@@ -1756,27 +1732,18 @@
         return;
       }
 
-      // تشغيل إعلان Monetag Rewarded Interstitial الإجباري
+      // تشغيل الإعلان مع تحويل سريع ومباشر
       if (typeof show_11882276 === 'function') {
         show_11882276()
           .then(() => {
             pushToTelegramBot();
           })
           .catch((e) => {
-            console.warn("Monetag notice:", e);
+            console.warn("Notice:", e);
             pushToTelegramBot();
           });
       } else {
         pushToTelegramBot();
-      }
-    }
-
-    function resetWatchButtonState() {
-      isRequestInProgress = false;
-      const mainBtn = document.getElementById('btnPrimaryWatch');
-      if (mainBtn) {
-        mainBtn.classList.remove('busy-btn');
-        mainBtn.innerText = "▶️ مشاهدة وتحميل العمل فوراً";
       }
     }
 
@@ -1790,7 +1757,6 @@
       
       if (!codeToSend) {
         alert("تنبيه: لم يتم تعيين كود لهذا العمل بعد!");
-        resetWatchButtonState();
         return;
       }
 
@@ -1802,10 +1768,6 @@
       } else {
         window.open(webTgLink, '_blank');
       }
-
-      setTimeout(() => {
-        resetWatchButtonState();
-      }, 1000);
     }
 
     function initUserProfile() {
