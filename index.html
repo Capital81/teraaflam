@@ -558,7 +558,6 @@
         <div class="icon-btn" onclick="openThemePicker()" title="تغيير الثيم">🎨</div>
         <div class="icon-btn" onclick="toggleSmartSearch()" title="بحث">🔍</div>
       </div>
-      <!-- الضغط 3 مرات متتالية هنا يفتح لوحة الإدارة سراً -->
       <div class="brand" onclick="handleSecretAdminClick()" title="تيرا أفلام">
         <div class="brand-glow"></div>
         <span>تيرا أفلام</span>
@@ -935,7 +934,6 @@
     let activeAdminSelectedSeason = 1;
     let isRequestInProgress = false;
 
-    // فتح لوحة الإدارة عند الضغط 3 مرات متتالية على كلمة "تيرا أفلام"
     let adminClickCount = 0;
     let adminClickTimer = null;
 
@@ -1362,7 +1360,7 @@
               <div style="font-size:10px; color:var(--text-dim); margin-top:2px;">${item.type} • ★ ${item.score} • ${item.year}</div>
             </div>
           </div>
-        `).join('');
+        `);
       }
       drop.style.display = 'block';
     }
@@ -1719,12 +1717,10 @@
 
     const ADS_COOLDOWN = 10 * 60 * 1000;
 
-    // معالجة الضغط مع فك أي تعليق تلقائياً
     function triggerWatchRequest() {
       if (isRequestInProgress) return;
       isRequestInProgress = true;
       
-      // فك الحظر خلال 1.5 ثانية تلقائياً لمنع أي تعليق
       setTimeout(() => { isRequestInProgress = false; }, 1500);
 
       const mainBtn = document.getElementById('btnPrimaryWatch');
@@ -1758,7 +1754,6 @@
       }
     }
 
-    // إرسال كود العمل للبوت والنزول للشات مباشرة بدون تعليق
     function pushToTelegramBot() {
       const bot = BOT_SERVER_USERNAME;
       let codeToSend = currentPayloadCode;
@@ -1778,16 +1773,9 @@
       const webTgLink = `https://t.me/${bot}?start=${codeToSend.trim()}`;
       const tg = window.Telegram?.WebApp;
 
-      if (tg) {
-        // فتح الرابط بالبوت
+      if (tg && typeof tg.openTelegramLink === 'function') {
         tg.openTelegramLink(webTgLink);
-
-        // إنزال النافذة فوراً لتظهر محادثة الشات والفيديو
-        setTimeout(() => {
-          try {
-            tg.close();
-          } catch(e) {}
-        }, 150);
+        // تم إلغاء أمر tg.close() لمنع إغلاق الموقع على متصفح أو تطبيق الكمبيوتر
       } else {
         window.open(webTgLink, '_blank');
       }
