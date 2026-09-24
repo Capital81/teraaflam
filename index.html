@@ -31,7 +31,6 @@
 
     .wrapper { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-    /* الهيدر العلوي */
     .top-nav {
       position: sticky; top: 0;
       background: rgba(7, 9, 19, 0.88);
@@ -51,7 +50,6 @@
     }
     .icon-btn:hover { border-color: var(--accent); color: #fff; }
 
-    /* شريط البحث */
     .search-panel { max-height: 0; overflow: visible; opacity: 0; position: relative; margin-bottom: 0; transition: all 0.3s ease; z-index: 5000; }
     .search-panel.active { max-height: 90px; opacity: 1; margin: 12px 0 20px 0; }
     .search-input-field {
@@ -71,7 +69,6 @@
     .search-entry:hover { background: rgba(255,255,255,0.08); }
     .search-entry img { width: 40px; height: 55px; border-radius: 6px; object-fit: cover; background: #222; }
 
-    /* سلايدر الهيرو */
     .spotlight-card {
       position: relative; width: 100%; height: 320px;
       border-radius: 22px; overflow: hidden; margin: 16px 0 12px 0;
@@ -118,7 +115,6 @@
       padding: 7px 16px; border-radius: 20px; cursor: pointer;
     }
 
-    /* فلاتر الأقسام */
     .filter-pills-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; }
     .filter-pills-row::-webkit-scrollbar { display: none; }
     .filter-pill {
@@ -128,7 +124,6 @@
     }
     .filter-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 15px var(--accent-glow); }
 
-    /* شبكة الكروت */
     .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
     @media (min-width: 500px) { .cards-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
     @media (min-width: 768px) { .cards-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; } }
@@ -156,7 +151,6 @@
     .view-container { display: none; }
     .view-container.active { display: block; }
 
-    /* تفاصيل العمل السينمائية */
     .etfarag-hero-wrap {
       position: relative;
       margin: -14px -16px 20px -16px;
@@ -419,7 +413,6 @@
     .profile-link-row:hover { background: rgba(255,255,255,0.04); }
     .profile-link-row .arrow-icon { color: var(--text-dim); font-size: 12px; }
 
-    /* شريط التنقل السفلي للهواتف */
     .capsule-navbar {
       position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
       width: calc(100% - 28px); max-width: 440px;
@@ -438,7 +431,6 @@
     }
     .cap-btn.active { color: var(--accent); }
 
-    /* القائمة الجانبية للكمبيوتر (Sidebar) */
     .desktop-sidebar {
       display: none;
     }
@@ -526,7 +518,7 @@
 </head>
 <body>
 
-  <!-- القائمة الجانبية للكمبيوتر (Sidebar) -->
+  <!-- القائمة الجانبية للكمبيوتر -->
   <nav class="desktop-sidebar">
     <div class="sidebar-brand" onclick="handleSecretAdminClick()">
       <div class="brand-glow"></div>
@@ -584,11 +576,9 @@
         <button class="btn-dice" onclick="rollRandomMovie()">🎲 جرب حظك (اقتراح ذكي)</button>
       </div>
 
-      <!-- قسم الأعلى مشاهدة -->
       <div class="sec-block-title">🔥 الأعلى مشاهدة وتقييماً</div>
       <div class="similar-row-scroll" id="homeTopRatedRow" style="margin-bottom: 24px;"></div>
 
-      <!-- قسم مضاف حديثاً -->
       <div class="sec-block-title">✨ مضاف حديثاً</div>
       <div class="cards-grid" id="mainHomeGrid"></div>
     </main>
@@ -696,7 +686,7 @@
       </div>
     </main>
 
-    <!-- 5. واجهة حسابي الشاملة -->
+    <!-- 5. واجهة حسابي -->
     <main id="view-profile" class="view-container">
       <div class="profile-card-modern">
         <div class="profile-user-left">
@@ -805,7 +795,7 @@
 
   </div>
 
-  <!-- نافذة شرح النقاط -->
+  <!-- نافذة النقاط -->
   <div class="overlay-backdrop" id="pointsInfoModalWindow" onclick="closePointsInfoModal(event)">
     <div class="dialog-card">
       <h3 style="font-size: 17px; font-weight: 900; margin-bottom: 12px; color:#fbbf24;">💡 كيف يعمل نظام النقاط والـ VIP؟</h3>
@@ -848,7 +838,7 @@
 
       <div id="admSectionAdd">
         <input type="text" id="admSearchQuery" class="admin-input" placeholder="رابط TMDB أو رقم العمل أو اسمه...">
-        <button class="btn-fetch-tmDB" onclick="fetchTMDBData()">⚡ جلب البوستر والتفاصيل تلقائياً (TMDB)</button>
+        <button class="btn-fetch-tmDB" onclick="fetchTMDBData()">⚡ جلب البوستر والحلقات والتفاصيل تلقائياً (TMDB)</button>
 
         <input type="text" id="admTitle" class="admin-input" placeholder="اسم العمل بالعربي">
         <input type="text" id="admSub" class="admin-input" placeholder="الاسم الإنجليزي والسنة">
@@ -931,6 +921,7 @@
 
     let database = [];
     let currentEditingEpisodeCodes = {};
+    let currentEditingEpisodesData = {}; // لتخزين أسماء ومدد الحلقات الأصلية
     let activeAdminSelectedSeason = 1;
     let isRequestInProgress = false;
 
@@ -1041,16 +1032,20 @@
       for (let ep = 1; ep <= epCount; ep++) {
         const key = `s${seasonNumber}_e${ep}`;
         const val = currentEditingEpisodeCodes[key] || '';
+        const epData = currentEditingEpisodesData[key] || {};
+        const epNameHint = epData.name ? ` (${epData.name})` : '';
+
         const row = document.createElement('div');
         row.className = 'ep-input-row';
         row.innerHTML = `
-          <label>م ${seasonNumber} - ح ${ep}:</label>
-          <input type="text" class="admin-input ep-code-item" data-key="${key}" placeholder="كود الحلقة في البوت..." value="${val}" style="margin-bottom:0; font-size:12px; padding:6px 10px;" oninput="currentEditingEpisodeCodes['${key}'] = this.value.trim()">
+          <label title="${epData.name || ''}">م ${seasonNumber} - ح ${ep}:</label>
+          <input type="text" class="admin-input ep-code-item" data-key="${key}" placeholder="كود الحلقة في البوت... ${epNameHint}" value="${val}" style="margin-bottom:0; font-size:12px; padding:6px 10px;" oninput="currentEditingEpisodeCodes['${key}'] = this.value.trim()">
         `;
         container.appendChild(row);
       }
     }
 
+    // دالة الجلب الذكية الاحترافية: تسحب المسلسل وتفاصيل وحلقات كل المواسم من TMDB
     async function fetchTMDBData() {
       let q = document.getElementById('admSearchQuery').value.trim();
       if (!q) return alert("ضع رابط صفحة TMDB أو رقم العمل أو اسمه أولاً!");
@@ -1070,9 +1065,11 @@
       }
 
       let item = null;
+      let usedApiKey = apiKeys[0];
 
       for (let key of apiKeys) {
         try {
+          usedApiKey = key;
           if (id) {
             let endpoint = isTv ? 'tv' : 'movie';
             let res = await fetch(`https://api.themoviedb.org/3/${endpoint}/${id}?api_key=${key}&language=ar`);
@@ -1097,6 +1094,7 @@
             if (sData.results && sData.results.length > 0) {
               item = sData.results[0];
               isTv = item.media_type === 'tv';
+              id = item.id;
               break;
             }
           }
@@ -1132,10 +1130,34 @@
         window.fetchedYear = year;
 
         currentEditingEpisodeCodes = {};
+        currentEditingEpisodesData = {};
         activeAdminSelectedSeason = 1;
-        toggleSeriesAdminFields();
 
-        alert(`✅ تم الجلب التلقائي بنجاح!\nالنوع: ${isSeriesMode ? 'مسلسل 📺' : 'فيلم 🎬'}\nالمواسم: ${seasons} | حلقات الموسم: ${epPerSeason}`);
+        // جلب أسماء الحلقات الأصلية لكل موسم باللغة العربية
+        if (isSeriesMode && id) {
+          try {
+            for (let s = 1; s <= seasons; s++) {
+              let sRes = await fetch(`https://api.themoviedb.org/3/tv/${id}/season/${s}?api_key=${usedApiKey}&language=ar`);
+              if (sRes.ok) {
+                let sData = await sRes.json();
+                if (sData.episodes && Array.isArray(sData.episodes)) {
+                  sData.episodes.forEach(e => {
+                    const epKey = `s${s}_e${e.episode_number}`;
+                    currentEditingEpisodesData[epKey] = {
+                      name: e.name || `الحلقة ${e.episode_number}`,
+                      duration: e.runtime || (item.episode_run_time ? item.episode_run_time[0] : 45)
+                    };
+                  });
+                }
+              }
+            }
+          } catch(err) {
+            console.log("Season detail fetch notice:", err);
+          }
+        }
+
+        toggleSeriesAdminFields();
+        alert(`✅ تم الجلب التلقائي بنجاح!\nالنوع: ${isSeriesMode ? 'مسلسل 📺' : 'فيلم 🎬'}\nالمواسم: ${seasons} | تم جلب أسماء الحلقات الأصلية كاملة!`);
       } else {
         alert("تعذر جلب العمل تلقائياً، تأكد من الرقم أو الرابط.");
       }
@@ -1167,7 +1189,8 @@
         code: code,
         seasons: seasonsCount,
         episodesPerSeason: episodesCount,
-        episodeCodes: currentEditingEpisodeCodes
+        episodeCodes: currentEditingEpisodeCodes,
+        episodesData: currentEditingEpisodesData // حفظ أسماء ومدد الحلقات
       };
 
       await fetch(`${FIREBASE_DB_URL}movies/${code}.json`, {
@@ -1255,6 +1278,7 @@
       window.fetchedYear = item.year;
 
       currentEditingEpisodeCodes = Object.assign({}, item.episodeCodes || {});
+      currentEditingEpisodesData = Object.assign({}, item.episodesData || {});
       activeAdminSelectedSeason = 1;
 
       toggleSeriesAdminFields();
@@ -1360,7 +1384,7 @@
               <div style="font-size:10px; color:var(--text-dim); margin-top:2px;">${item.type} • ★ ${item.score} • ${item.year}</div>
             </div>
           </div>
-        `);
+        `).join('');
       }
       drop.style.display = 'block';
     }
@@ -1566,6 +1590,7 @@
       renderEpisodesList(series, 1, episodesCount);
     }
 
+    // عرض الحلقات الاحترافي مع الاسم والمدة الأصلية
     function renderEpisodesList(series, seasonNum, count) {
       const epContainer = document.getElementById('episodesListContainer');
       epContainer.innerHTML = '';
@@ -1573,6 +1598,11 @@
       for (let ep = 1; ep <= count; ep++) {
         const specificKey = `s${seasonNum}_e${ep}`;
         const specificCode = (series.episodeCodes && series.episodeCodes[specificKey]) || series.code;
+        
+        // استرجاع الاسم الحقيقي والمدة بالدقائق (إن وجدت)
+        const epData = (series.episodesData && series.episodesData[specificKey]) || {};
+        const epTitle = epData.name || `الحلقة ${ep}`;
+        const epDuration = epData.duration ? `${epData.duration} دقيقة` : "48 دقيقة";
 
         const card = document.createElement('div');
         card.className = `etfarag-ep-card ${ep === 1 ? 'active-playing' : ''}`;
@@ -1582,22 +1612,32 @@
           <div class="etfarag-ep-right">
             <div class="etfarag-ep-index">${ep}</div>
             <div class="etfarag-ep-titles">
-              <span class="ep-main-name">الحلقة ${ep}</span>
-              <span class="ep-duration-tag">1080p FHD</span>
+              <span class="ep-main-name">${epTitle}</span>
+              <span class="ep-duration-tag">${epDuration}</span>
             </div>
           </div>
           <div class="etfarag-ep-left-play">▶</div>
         `;
 
+        // النقر الفوري الصريح للبوت الجديد
         card.onclick = () => {
           document.querySelectorAll('.etfarag-ep-card').forEach(c => c.classList.remove('active-playing'));
           card.classList.add('active-playing');
           selectedEpisodeNumber = ep;
-
           currentPayloadCode = specificCode;
-          document.getElementById('watchBtnText').innerText = `جاري فتح الحلقة ${ep} في البوت...`;
 
-          triggerWatchRequest();
+          if (activeMovieSelected) {
+            saveHistoryRecord(activeMovieSelected, `الموسم ${selectedSeasonIndex} - ${epTitle}`);
+          }
+
+          const targetUrl = `https://t.me/${BOT_SERVER_USERNAME}?start=${specificCode.trim()}`;
+          const tg = window.Telegram?.WebApp;
+
+          if (tg && typeof tg.openTelegramLink === 'function') {
+            tg.openTelegramLink(targetUrl);
+          } else {
+            window.open(targetUrl, '_blank');
+          }
         };
 
         epContainer.appendChild(card);
@@ -1775,7 +1815,6 @@
 
       if (tg && typeof tg.openTelegramLink === 'function') {
         tg.openTelegramLink(webTgLink);
-        // تم إلغاء أمر tg.close() لمنع إغلاق الموقع على متصفح أو تطبيق الكمبيوتر
       } else {
         window.open(webTgLink, '_blank');
       }
