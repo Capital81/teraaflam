@@ -697,13 +697,13 @@
           <div class="user-info-text">
             <div class="profile-name-title">
               <span id="uNameDisplay">محمد</span>
-              <span id="uVipCrown">👑</span>
+              <span id="uVipCrown" style="display:none;">👑</span>
             </div>
             <div class="profile-id-sub">معرف الحساب: <span id="uIdDisplay" style="color:var(--accent);">1039890302</span></div>
             <span class="btn-edit-name" onclick="changeCustomName()">✏️ تعديل الاسم</span>
           </div>
         </div>
-        <span class="badge-pill" id="userVipBadgeStatus" style="font-size:11px; padding:6px 12px;">عضوية قياسية</span>
+        <span class="badge-pill" id="userVipBadgeStatus" style="font-size:11px; padding:6px 12px; background:var(--accent);">عضوية قياسية</span>
       </div>
 
       <div id="continueWatchingWrap" style="display:none; margin-bottom: 18px;">
@@ -908,7 +908,8 @@
     const FIREBASE_DB_URL = "https://tera-flix-default-rtdb.europe-west1.firebasedatabase.app/";
     const BOT_SERVER_USERNAME = "Unlimited99Server_bot";
 
-    const ADSGRAM_BLOCK_ID = "49258";
+    // تفعيل Block ID الرسمي الجديد
+    const ADSGRAM_BLOCK_ID = "49553";
     let AdController = null;
 
     try {
@@ -921,7 +922,7 @@
 
     let database = [];
     let currentEditingEpisodeCodes = {};
-    let currentEditingEpisodesData = {}; // لتخزين أسماء ومدد الحلقات الأصلية
+    let currentEditingEpisodesData = {};
     let activeAdminSelectedSeason = 1;
     let isRequestInProgress = false;
 
@@ -1045,7 +1046,6 @@
       }
     }
 
-    // دالة الجلب الذكية الاحترافية: تسحب المسلسل وتفاصيل وحلقات كل المواسم من TMDB
     async function fetchTMDBData() {
       let q = document.getElementById('admSearchQuery').value.trim();
       if (!q) return alert("ضع رابط صفحة TMDB أو رقم العمل أو اسمه أولاً!");
@@ -1133,7 +1133,6 @@
         currentEditingEpisodesData = {};
         activeAdminSelectedSeason = 1;
 
-        // جلب أسماء الحلقات الأصلية لكل موسم باللغة العربية
         if (isSeriesMode && id) {
           try {
             for (let s = 1; s <= seasons; s++) {
@@ -1190,7 +1189,7 @@
         seasons: seasonsCount,
         episodesPerSeason: episodesCount,
         episodeCodes: currentEditingEpisodeCodes,
-        episodesData: currentEditingEpisodesData // حفظ أسماء ومدد الحلقات
+        episodesData: currentEditingEpisodesData
       };
 
       await fetch(`${FIREBASE_DB_URL}movies/${code}.json`, {
@@ -1590,7 +1589,6 @@
       renderEpisodesList(series, 1, episodesCount);
     }
 
-    // عرض الحلقات الاحترافي مع الاسم والمدة الأصلية
     function renderEpisodesList(series, seasonNum, count) {
       const epContainer = document.getElementById('episodesListContainer');
       epContainer.innerHTML = '';
@@ -1599,7 +1597,6 @@
         const specificKey = `s${seasonNum}_e${ep}`;
         const specificCode = (series.episodeCodes && series.episodeCodes[specificKey]) || series.code;
         
-        // استرجاع الاسم الحقيقي والمدة بالدقائق (إن وجدت)
         const epData = (series.episodesData && series.episodesData[specificKey]) || {};
         const epTitle = epData.name || `الحلقة ${ep}`;
         const epDuration = epData.duration ? `${epData.duration} دقيقة` : "48 دقيقة";
@@ -1619,7 +1616,7 @@
           <div class="etfarag-ep-left-play">▶</div>
         `;
 
-        // النقر الفوري الصريح للبوت الجديد
+        // تشغيل الحلقة الإجباري مع مرور الإعلان
         card.onclick = () => {
           document.querySelectorAll('.etfarag-ep-card').forEach(c => c.classList.remove('active-playing'));
           card.classList.add('active-playing');
@@ -1630,14 +1627,7 @@
             saveHistoryRecord(activeMovieSelected, `الموسم ${selectedSeasonIndex} - ${epTitle}`);
           }
 
-          const targetUrl = `https://t.me/${BOT_SERVER_USERNAME}?start=${specificCode.trim()}`;
-          const tg = window.Telegram?.WebApp;
-
-          if (tg && typeof tg.openTelegramLink === 'function') {
-            tg.openTelegramLink(targetUrl);
-          } else {
-            window.open(targetUrl, '_blank');
-          }
+          triggerWatchRequest();
         };
 
         epContainer.appendChild(card);
@@ -1755,13 +1745,10 @@
     const savedTheme = localStorage.getItem('user_theme_tera');
     if (savedTheme) document.body.className = savedTheme;
 
-    const ADS_COOLDOWN = 10 * 60 * 1000;
-
+    // طلب المشاهدة المربوط بالإعلان الإجباري وبدون تخطي
     function triggerWatchRequest() {
       if (isRequestInProgress) return;
       isRequestInProgress = true;
-      
-      setTimeout(() => { isRequestInProgress = false; }, 1500);
 
       const mainBtn = document.getElementById('btnPrimaryWatch');
       if (mainBtn) mainBtn.classList.add('busy-btn');
@@ -1771,6 +1758,7 @@
         saveHistoryRecord(activeMovieSelected, subTxt);
       }
 
+      // فحص عضوية الـ VIP
       const vipUntil = parseInt(localStorage.getItem('tera_vip_until') || '0');
       const isVipActive = Date.now() < vipUntil;
 
@@ -1779,18 +1767,35 @@
         return;
       }
 
-      const lastAd = localStorage.getItem('adsgram_last_view');
-      const now = Date.now();
-
-      if ((!lastAd || (now - parseInt(lastAd)) >= ADS_COOLDOWN) && AdController) {
-        AdController.show().then(() => {
-          localStorage.setItem('adsgram_last_view', Date.now().toString());
-          pushToTelegramBot();
-        }).catch((err) => {
-          pushToTelegramBot();
-        });
+      // حساب قياسي: إعلان Adsgram إجباري بدون Cooldown
+      if (AdController) {
+        AdController.show()
+          .then((result) => {
+            // التحقق الصارم من انتهاء الإعلان كاملاً
+            if (result && result.done) {
+              pushToTelegramBot();
+            } else {
+              alert("⚠️ يجب إكمال مشاهدة الإعلان بالكامل لمتابعة المشاهدة.");
+              resetWatchButtonState();
+            }
+          })
+          .catch((err) => {
+            console.error("Adsgram failed:", err);
+            // في حال عدم توفر إعلان حالياً من الشبكة، يُفتح الفيديو تفادياً لتعليق المستخدم
+            pushToTelegramBot();
+          });
       } else {
+        // إذا لم يكن السكربت محملاً
         pushToTelegramBot();
+      }
+    }
+
+    function resetWatchButtonState() {
+      isRequestInProgress = false;
+      const mainBtn = document.getElementById('btnPrimaryWatch');
+      if (mainBtn) {
+        mainBtn.classList.remove('busy-btn');
+        mainBtn.innerText = "▶️ مشاهدة وتحميل العمل فوراً";
       }
     }
 
@@ -1804,9 +1809,7 @@
       
       if (!codeToSend) {
         alert("تنبيه: لم يتم تعيين كود لهذا العمل بعد!");
-        isRequestInProgress = false;
-        const mainBtn = document.getElementById('btnPrimaryWatch');
-        if (mainBtn) mainBtn.classList.remove('busy-btn');
+        resetWatchButtonState();
         return;
       }
 
@@ -1820,16 +1823,14 @@
       }
 
       setTimeout(() => {
-        isRequestInProgress = false;
-        const mainBtn = document.getElementById('btnPrimaryWatch');
-        if (mainBtn) {
-          mainBtn.classList.remove('busy-btn');
-          mainBtn.innerText = "▶️ مشاهدة وتحميل (1080p FHD)";
-        }
+        resetWatchButtonState();
       }, 1000);
     }
 
     function initUserProfile() {
+      // إجبار الحساب على الوضع القياسي للاختبار وفحص الإعلان
+      localStorage.removeItem('tera_vip_until');
+
       const tg = window.Telegram?.WebApp;
       let userName = localStorage.getItem('custom_user_name') || "محمد";
       let userPhoto = localStorage.getItem('custom_user_photo') || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80";
@@ -1850,12 +1851,16 @@
 
       const vipUntil = parseInt(localStorage.getItem('tera_vip_until') || '0');
       const badge = document.getElementById('userVipBadgeStatus');
+      const crown = document.getElementById('uVipCrown');
+
       if (Date.now() < vipUntil) {
         badge.innerText = "VIP نشط (بدون إعلانات)";
         badge.style.background = "#10b981";
+        if (crown) crown.style.display = "inline";
       } else {
         badge.innerText = "عضوية قياسية";
         badge.style.background = "var(--accent)";
+        if (crown) crown.style.display = "none";
       }
     }
 
@@ -1901,8 +1906,10 @@
         localStorage.setItem('tera_vip_until', (Date.now() + oneWeek).toString());
 
         const badge = document.getElementById('userVipBadgeStatus');
+        const crown = document.getElementById('uVipCrown');
         badge.innerText = "VIP نشط (بدون إعلانات)";
         badge.style.background = "#10b981";
+        if (crown) crown.style.display = "inline";
 
         alert("🎉 مبروك! تم تفعيل اشتراك VIP بنجاح لمدة أسبوع كامل بدون إعلانات!");
       }
